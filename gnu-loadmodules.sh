@@ -1,6 +1,10 @@
-module swap PrgEnv-cray PrgEnv-gnu
+module unload PrgEnv-cray
 module load PrgEnv-gnu
-modeul load crapy-mpich/7.0.3
+module unload cray-mpich
+module load cray-mpich/7.0.3
 module load cudatoolkit
 module load cmake
+module unload craype
 module load craype/2.2.0
+module unload cray-libsci
+module load cray-libsci/13.0.1

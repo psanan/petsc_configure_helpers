@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 
-# Do the following before running this configure script [daint.cscs.ch]
-#
-# [Module load PrgEnv-gnu]
-# Module load cmake
-
-
+# make sure to load the correct modules (see gnu-loadmodules.sh)
 
 configure_options = [
 # On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
