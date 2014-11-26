@@ -8,3 +8,4 @@ module unload craype
 module load craype/2.2.0
 module unload cray-libsci
 module load cray-libsci/13.0.1
+module load python/2.7.6
