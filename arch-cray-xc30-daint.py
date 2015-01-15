@@ -29,10 +29,6 @@ configure_options = [
   'PETSC_ARCH=arch-cray-xc30-daint',
   #'--with-blas-lapack-lib=-L/opt/cray...'
 
-  '--download-parmetis',
-  '--download-metis',
-  '--download-mumps',
-  '--download-scalapack',
   '--download-viennacl',
   '--with-opencl=yes',
   '--with-opencl-lib=/opt/cray/nvidia/default/lib64/libOpenCL.so',
