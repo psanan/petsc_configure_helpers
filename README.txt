@@ -19,6 +19,6 @@ To get PETSc running on daint
     export PETSC_ARCH=arch-gnu-xc30-daint
     cd src/ksp/ksp/examples/tutorials
     make ex23
-    sbatch ~/petsc_daint_helpers/ex3_twogpus.sbatch
+    sbatch ~/petsc_daint_helpers/ex23_twogpus.sbatch
     watch squeue -u psanan
     cat ex23_twogpus.out

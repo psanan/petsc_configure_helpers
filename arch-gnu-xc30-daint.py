@@ -6,7 +6,7 @@ configure_options = [
 # On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
   '--with-cc=cc',
   '--with-cxx=CC',
-  '--with-fc=0',
+  '--with-fc=ftn',
 
   '--with-clib-autodetect=0',
   '--with-cxxlib-autodetect=0',
@@ -28,6 +28,14 @@ configure_options = [
   '--with-opencl=yes',
   '--with-opencl-lib=/opt/cray/nvidia/default/lib64/libOpenCL.so',
   '--with-opencl-include=/opt/nvidia/cudatoolkit/5.5.20-1.0501.7945.8.2/include',
+
+  # MUMPS and its dependencies
+  '--download-mumps',
+  '--download-metis',
+  '--download-parmetis',
+  '--download-scalapack',
+
+  '--download-spai',
   ]
 
 if __name__ == '__main__':
