@@ -12,6 +12,9 @@ configure_options = [
   '--with-cxx=CC',
   '--with-fc=ftn',
 
+  '--CFLAGS=-dynamic -craympich-mt',
+  '--CXXFLAGS=-dynamic -craympich-mt',
+
   '--with-clib-autodetect=0',
   '--with-cxxlib-autodetect=0',
   '--with-fortranlib-autodetect=0',
