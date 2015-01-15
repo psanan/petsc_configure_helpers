@@ -4,9 +4,10 @@
 
 configure_options = [
 # On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
-  '--with-cc=cc',
-  '--with-cxx=CC',
-  '--with-fc=ftn',
+# Note that we add a flag to use mpich-mt
+  '--with-cc=\"cc -craympich-mt\"',
+  '--with-cxx=\"CC -craympich-mt\"',
+  '--with-fc=\"ftn -craympich-mt\"',
 
   '--with-clib-autodetect=0',
   '--with-cxxlib-autodetect=0',
