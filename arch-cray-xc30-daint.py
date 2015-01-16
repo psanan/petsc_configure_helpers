@@ -7,7 +7,7 @@
 # Module load cmake
 
 configure_options = [
-# On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
+# On cray cc,CC,ftn are equivalent to mpicc,mpiCC,mpif90
   '--with-cc=cc',
   '--with-cxx=CC',
   '--with-fc=ftn',
