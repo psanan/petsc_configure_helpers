@@ -8,7 +8,7 @@ To get PETSc running on daint
 2) Configure and build PETSc. For example (with gnu, for cray or a different arch, use the correspondingly-named files)
     git clone https://bitbucket.org/petsc/petsc
     cd petsc
-    . ../petsc_daint_helpers/arch-gnu-xc30-daint.py
+    python ../petsc_daint_helpers/arch-gnu-xc30-daint.py
     . ../petsc_daint_helpers/arch-gnu-xc30-daint-conftest-batchsubmit.sh
     ./reconfigure-arch-gnu-xc30-daint.py
     make PETSC_ARCH=arch-gnu-xc30-daint PETSC_DIR=$PWD
