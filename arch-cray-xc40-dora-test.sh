@@ -19,7 +19,8 @@ sbatch petsc_ex19_test1.batch
 rm petsc_ex19_test1.batch
 
 
- # Second test - 2 multithreaded processes on 2 nodes
+ # Second test 
+ # (A third test with 2 multithreaded processes, one on each of two nodes, might also be useful)
  rm -f arch-cray-xc40-dora-test2.out petsc_ex19_test2.batch
  echo '--Running SNES Tutorial on with 2 MPI processes (on one node)' 
  echo '#!/bin/bash' > petsc_ex19_test2.batch
