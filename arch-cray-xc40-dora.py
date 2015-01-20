@@ -3,11 +3,8 @@
 
 # Do (at least) the following before running this configure script [daint.cscs.ch]
 #
-# [Module load PrgEnv-cray]
-# Module load cray-mpich
-# Module load cmake
-#
-# You should be okay running the cray-loadmodules.sh here
+# You should be okay using the default modules (you need recent PrgEnv-cray and cray-mpich), or you can
+# run the provided cray-loadmodules.sh here
 #
 # Note that ATTOTW this is no different from the xc30 daint variant (but we want different petsc arches in any case)
 
