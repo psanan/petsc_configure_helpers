@@ -1,7 +1,10 @@
 #!/bin/bash -l
 #SBATCH --ntasks=128
 #SBATCH --time=1
-#SBATCH --output=default.out
+
+# Note: add your own custom output file if you need one, with
+# something like the following commented-out line
+# #SBATCH --output=default.out
 
 export MPICH_VERSION_DISPLAY=1
 export MPICH_NEMESIS_ASYNC_PROGRESS=MC
