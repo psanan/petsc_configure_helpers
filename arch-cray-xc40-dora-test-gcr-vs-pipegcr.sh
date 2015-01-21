@@ -1,4 +1,5 @@
-# A convenience script to run GCR vs. PIPEGCR tests using ex60
+# A convenience script to run GCR vs. PIPEGCR tests (currently) using ex43 and ex49.
+# THIS SCRIPT IS WORK IN PROGRESS
 # Note that PETSC_ARCH is hardcoded below
 # The settings have been copied from the runex19 settings at the time of this writing
 # Note that this scripts needs to be run from PETSC_DIR
