@@ -13,7 +13,7 @@ alias echo="echo -e"
 TASKS=1024
 CPUS=2
 THREADS=2
-TIME=10 # job time in minutes
+TIME=2 # job time in minutes
 MACHINENAME=`echo $HOSTNAME|sed -r 's/[0-9]{1,10}$//'`
 if [ $MACHINENAME == dora ]
 then
@@ -61,7 +61,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_gcr_test1.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_gcr_test1.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_gcr_test1.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test1.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05' >> petsc_ex43_gcr_test1.batch; fi;
 echo '#SBATCH --output=petsc_ex43_gcr_test1-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_gcr_test1.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43 -stokes_ksp_type gcr -stokes_ksp_gcr_restart 60 -stokes_ksp_rtol 1e-8 -c_str 3 -sinker_eta0 1.0 -sinker_eta1 100 -sinker_dx 0.4 -sinker_dy 0.3 -mx '$MX' -my '$MY' -stokes_ksp_monitor_short -stokes_pc_type mg -stokes_mg_levels_pc_type fieldsplit -stokes_pc_mg_galerkin -stokes_mg_levels_pc_fieldsplit_block_size 3 -stokes_mg_levels_pc_fieldsplit_0_fields 0,1 -stokes_mg_levels_pc_fieldsplit_1_fields 2 -stokes_mg_levels_fieldsplit_0_pc_type sor -stokes_mg_levels_fieldsplit_1_pc_type sor -stokes_mg_levels_ksp_type chebyshev -stokes_mg_levels_ksp_max_it 1 -stokes_mg_levels_ksp_chebyshev_estimate_eigenvalues 0,0.2,0,1.1 -stokes_pc_mg_levels 4 -stokes_ksp_view -log_summary -options_left' >> petsc_ex43_gcr_test1.batch
 sbatch petsc_ex43_gcr_test1.batch
@@ -75,7 +75,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_gcr_test2.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_gcr_test2.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_gcr_test2.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test2.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05' >> petsc_ex43_gcr_test2.batch; fi;
 echo '#SBATCH --output=petsc_ex43_gcr_test2-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_gcr_test2.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43 \
 -stokes_ksp_type gcr -stokes_ksp_gcr_restart 60 -stokes_ksp_rtol 1e-8 -stokes_pc_type fieldsplit -stokes_pc_fieldsplit_block_size 3 -stokes_pc_fieldsplit_type SYMMETRIC_MULTIPLICATIVE -stokes_pc_fieldsplit_0_fields 0,1 -stokes_pc_fieldsplit_1_fields 2 -stokes_fieldsplit_0_ksp_type cg -stokes_fieldsplit_0_ksp_rtol 1e-5 -stokes_fieldsplit_0_pc_type ksp -stokes_fieldsplit_0_ksp_ksp_type preonly -stokes_fieldsplit_0_ksp_pc_type bjacobi -stokes_fieldsplit_1_ksp_type preonly -stokes_fieldsplit_1_pc_type bjacobi -c_str 0 -solcx_eta0 1.0 -solcx_eta1 1.0e6 -solcx_xc 0.5 -solcx_nz 2 -mx '$MX' -my '$MY' -stokes_ksp_monitor_short -log_summary -options_left' >> petsc_ex43_gcr_test2.batch
@@ -91,7 +91,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_gcr_test3.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_gcr_test3.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_gcr_test3.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test3.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test3.batch; fi;
 echo '#SBATCH --output=petsc_ex43_gcr_test3-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_gcr_test3.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43 -stokes_ksp_type gcr -stokes_ksp_gcr_restart 60 -stokes_ksp_rtol 1e-8 -stokes_pc_type fieldsplit -stokes_pc_fieldsplit_block_size 3 -stokes_pc_fieldsplit_type SYMMETRIC_MULTIPLICATIVE -stokes_pc_fieldsplit_0_fields 0,1 -stokes_pc_fieldsplit_1_fields 2 -stokes_fieldsplit_0_ksp_type preonly -stokes_fieldsplit_0_pc_type ksp -stokes_fieldsplit_0_ksp_ksp_type chebyshev -stokes_fieldsplit_0_ksp_pc_type bjacobi -stokes_fieldsplit_1_ksp_type preonly  -stokes_fieldsplit_1_pc_type ksp -stokes_fieldsplit_1_ksp_ksp_type chebyshev -stokes_fieldsplit_1_ksp_pc_type bjacobi -c_str 0 -solcx_eta0 1.0 -solcx_eta1 1.0e6 -solcx_xc 0.5 -solcx_nz 2 -mx '$MX' -my '$MY' -stokes_ksp_monitor_short -stokes_fieldsplit_0_ksp_ksp_monitor_short -log_summary -options_left -stokes_ksp_view' >> petsc_ex43_gcr_test3.batch
 sbatch petsc_ex43_gcr_test3.batch
@@ -105,7 +105,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_gcr_test4.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_gcr_test4.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_gcr_test4.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test4.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test4.batch; fi;
 echo '#SBATCH --output=petsc_ex43_gcr_test4-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_gcr_test4.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43					\
 -stokes_ksp_type gcr -stokes_ksp_gcr_restart 60 -stokes_ksp_rtol 1e-8							\
@@ -137,7 +137,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_gcr_test5.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_gcr_test5.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_gcr_test5.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test5.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test5.batch; fi;
 echo '#SBATCH --output=petsc_ex43_gcr_test5-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_gcr_test5.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43					\
 -stokes_ksp_type gcr -stokes_ksp_gcr_restart 60 -stokes_ksp_rtol 1e-8							\
@@ -171,7 +171,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_gcr_test6.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_gcr_test6.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_gcr_test6.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test6.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test6.batch; fi;
 echo '#SBATCH --output=petsc_ex43_gcr_test6-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_gcr_test6.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43					\
 -stokes_ksp_type gcr -stokes_ksp_gcr_restart 60 -stokes_ksp_rtol 1e-8							\
@@ -205,7 +205,7 @@ echo '--Running KSP Tutorial 43 pipelined with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_pipegcr_test1.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_pipegcr_test1.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_pipegcr_test1.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test1.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test1.batch; fi
 echo '#SBATCH --output=petsc_ex43_pipegcr_test1-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_pipegcr_test1.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43 -stokes_ksp_type pipegcr -stokes_ksp_pipegcr_mmax 60 -stokes_ksp_norm_type natural -stokes_ksp_rtol 1e-8 -c_str 3 -sinker_eta0 1.0 -sinker_eta1 100 -sinker_dx 0.4 -sinker_dy 0.3 -mx '$MX' -my '$MY' -stokes_ksp_monitor_short -stokes_pc_type mg -stokes_mg_levels_pc_type fieldsplit -stokes_pc_mg_galerkin -stokes_mg_levels_pc_fieldsplit_block_size 3 -stokes_mg_levels_pc_fieldsplit_0_fields 0,1 -stokes_mg_levels_pc_fieldsplit_1_fields 2 -stokes_mg_levels_fieldsplit_0_pc_type sor -stokes_mg_levels_fieldsplit_1_pc_type sor -stokes_mg_levels_ksp_type chebyshev -stokes_mg_levels_ksp_max_it 1 -stokes_mg_levels_ksp_chebyshev_estimate_eigenvalues 0,0.2,0,1.1 -stokes_pc_mg_levels 4 -stokes_ksp_view -log_summary -options_left' >> petsc_ex43_pipegcr_test1.batch
 sbatch petsc_ex43_pipegcr_test1.batch
@@ -219,7 +219,7 @@ echo '--Running KSP Tutorial 43 pipelined with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_pipegcr_test2.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_pipegcr_test2.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_pipegcr_test2.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test2.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test2.batch; fi;
 echo '#SBATCH --output=petsc_ex43_pipegcr_test2-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_pipegcr_test2.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43 \
 -stokes_ksp_type gcr -stokes_ksp_gcr_restart 60 -stokes_ksp_rtol 1e-8 -stokes_pc_type fieldsplit -stokes_pc_fieldsplit_block_size 3 -stokes_pc_fieldsplit_type SYMMETRIC_MULTIPLICATIVE -stokes_pc_fieldsplit_0_fields 0,1 -stokes_pc_fieldsplit_1_fields 2 -stokes_fieldsplit_0_ksp_type cg -stokes_fieldsplit_0_ksp_rtol 1e-5 -stokes_fieldsplit_0_pc_type ksp -stokes_fieldsplit_0_ksp_ksp_type preonly -stokes_fieldsplit_0_ksp_pc_type bjacobi -stokes_fieldsplit_1_ksp_type preonly -stokes_fieldsplit_1_pc_type bjacobi -c_str 0 -solcx_eta0 1.0 -solcx_eta1 1.0e6 -solcx_xc 0.5 -solcx_nz 2 -mx '$MX' -my '$MY' -stokes_ksp_monitor_short -log_summary -options_left' >> petsc_ex43_pipegcr_test2.batch
@@ -235,7 +235,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_pipegcr_test3.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_pipegcr_test3.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_pipegcr_test3.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test3.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test3.batch; fi;
 echo '#SBATCH --output=petsc_ex43_pipegcr_test3-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_pipegcr_test3.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43 -stokes_ksp_type gcr -stokes_ksp_pipegcr_mmax 60 -stokes_ksp_rtol 1e-8 -stokes_pc_type fieldsplit -stokes_pc_fieldsplit_block_size 3 -stokes_pc_fieldsplit_type SYMMETRIC_MULTIPLICATIVE -stokes_pc_fieldsplit_0_fields 0,1 -stokes_pc_fieldsplit_1_fields 2 -stokes_fieldsplit_0_ksp_type preonly -stokes_fieldsplit_0_pc_type ksp -stokes_fieldsplit_0_ksp_ksp_type chebyshev -stokes_fieldsplit_0_ksp_pc_type bjacobi -stokes_fieldsplit_1_ksp_type preonly  -stokes_fieldsplit_1_pc_type ksp -stokes_fieldsplit_1_ksp_ksp_type chebyshev -stokes_fieldsplit_1_ksp_pc_type bjacobi -c_str 0 -solcx_eta0 1.0 -solcx_eta1 1.0e6 -solcx_xc 0.5 -solcx_nz 2 -mx '$MX' -my '$MY' -stokes_ksp_monitor_short -stokes_fieldsplit_0_ksp_ksp_monitor_short -log_summary -options_left -stokes_ksp_view' >> petsc_ex43_pipegcr_test3.batch
 sbatch petsc_ex43_pipegcr_test3.batch
@@ -249,7 +249,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_pipegcr_test4.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_pipegcr_test4.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_pipegcr_test4.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test4.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test4.batch; fi;
 echo '#SBATCH --output=petsc_ex43_pipegcr_test4-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_pipegcr_test4.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43					\
 -stokes_ksp_type gcr -stokes_ksp_rtol 1e-8							\
@@ -281,7 +281,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_pipegcr_test5.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_pipegcr_test5.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_pipegcr_test5.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test5.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test5.batch; fi;
 echo '#SBATCH --output=petsc_ex43_pipegcr_test5-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_pipegcr_test5.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43					\
 -stokes_ksp_type gcr -stokes_ksp_rtol 1e-8						\
@@ -315,7 +315,7 @@ echo '--Running KSP Tutorial 43 with '$TASKS' MPI process'
 echo '#!/bin/bash' > petsc_ex43_pipegcr_test6.batch
 echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_pipegcr_test6.batch
 echo '#SBATCH --time='$TIME >> petsc_ex43_pipegcr_test6.batch
-echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test6.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test6.batch; fi;
 echo '#SBATCH --output=petsc_ex43_pipegcr_test6-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_pipegcr_test6.batch
 echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43					\
 -stokes_ksp_type gcr -stokes_ksp_rtol 1e-8						\
