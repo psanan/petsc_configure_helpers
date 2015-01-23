@@ -386,7 +386,7 @@ echo "redColor='\033[0;31m'"										>  $GREPSCRIPT
 echo "noColor='\033[0m'"										>> $GREPSCRIPT
 echo 'alias echo="echo -e"'										>> $GREPSCRIPT
 echo 'echo "${redColor}-- TOTAL TIME FOR SOLVE${noColor}"'						>> $GREPSCRIPT
-echo 'grep "Time (sec):"			*gcr*'$MACHINENAME'*'$TASKS'*'$MX'*'$MY'.out'		>> $GREPSCRIPT
+echo 'grep -A6 "Time (sec):"			*gcr*'$MACHINENAME'*'$TASKS'*'$MX'*'$MY'.out'		>> $GREPSCRIPT
 echo 'echo ""'												>> $GREPSCRIPT
 echo 'echo "${redColor}-- KSPSolve LOG${noColor}"'							>> $GREPSCRIPT
 echo 'grep "KSPSolve"				*gcr*'$MACHINENAME'*'$TASKS'*'$MX'*'$MY'.out'		>> $GREPSCRIPT
