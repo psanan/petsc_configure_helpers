@@ -5,9 +5,14 @@
 # Note that this scripts needs to be run from PETSC_DIR
 
 # bash variables
-redColor='\033[0;31m'
-noColor='\033[0m' # No Color
+redColor="\033[0;31m"
+redBoldColor="\033[1;31m"
+noColor='\033[0m'
 alias echo="echo -e"
+
+echo "${redBoldColor}===========================================================================${noColor}"
+echo "${redBoldColor}= DO NOT RUN THIS SCRIPT ON A DIFFERENT MACHINE BEFORE JOBS ARE SUBMITTED =${noColor}"
+echo "${redBoldColor}===========================================================================${noColor}"
 
 # Number of tasks, cpus, threads
 TASKS=1024
@@ -23,8 +28,8 @@ else
 fi;
 
 # Problem size
-MX=256
-MY=256
+MX=4096
+MY=4096
 
 # Solver settings
 OLDDIRS=60
@@ -33,15 +38,17 @@ OLDDIRS=60
 GCR1=false
 GCR2=false
 GCR3=false
-GCR4=true
-GCR5=true
-GCR6=true
+GCR4=false
+GCR5=false
+GCR6=false
+GCR7=true
 PGCR1=false
 PGCR2=false
 PGCR3=false
-PGCR4=true
-PGCR5=true
-PGCR6=true
+PGCR4=false
+PGCR5=false
+PGCR6=false
+PGCR7=true
 
 # Environment variables
 export MPICH_VERSION_DISPLAY=1 
@@ -52,7 +59,7 @@ export MPICH_SHARED_MEM_COLL_OPT=1
 export MPICH_DMAPP_HW_CE=1
 
 # create output dir
-mkdir out
+mkdir -p out
 
 # Build the example binary
 echo "--Building examples"
@@ -210,6 +217,63 @@ sbatch petsc_ex43_gcr_test6.batch
 rm petsc_ex43_gcr_test6.batch
 fi;
 
+# 7th GCR test using settings suggested by Patrick
+if [ $GCR7 == true ]; then
+rm -f petsc_ex43_gcr_test7.batch
+echo '--Running KSP Tutorial 43 with '$TASKS' MPI process' 
+echo '#!/bin/bash' > petsc_ex43_gcr_test7.batch
+echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_gcr_test7.batch
+echo '#SBATCH --time='$TIME >> petsc_ex43_gcr_test7.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_gcr_test7.batch; fi;
+echo '#SBATCH --output=out/petsc_ex43_gcr_test7-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_gcr_test7.batch
+echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43					\
+-options_left 1 \
+-stokes_ksp_monitor \
+-stokes_ksp_view \
+-stokes_ksp_converged_reason \
+-sinker_eta0 1.0e-2 -sinker_eta1 1.0e2 \
+-stokes_ksp_type gcr \
+-stokes_ksp_rtol 1e-06 \
+-stokes_ksp_max_it 399 \
+-stokes_pc_type fieldsplit \
+-stokes_pc_use_amat \
+-stokes_pc_fieldsplit_type schur \
+-stokes_pc_fieldsplit_schur_fact_type upper \
+-stokes_fieldsplit_p_ksp_type preonly \
+-stokes_fieldsplit_p_pc_type bjacobi \
+-stokes_fieldsplit_u_ksp_monitor \
+-stokes_fieldsplit_u_ksp_rtol 1e-1 \
+-stokes_fieldsplit_u_pc_type mg \
+-stokes_fieldsplit_u_pc_mg_log \
+-stokes_fieldsplit_u_mg_coarse_pc_type lu \
+-stokes_fieldsplit_u_mg_coarse_pc_factor_mat_solver_package mumps \
+-stokes_fieldsplit_u_pc_mg_galerkin \
+-stokes_fieldsplit_u_pc_mg_levels 4 \
+-stokes_fieldsplit_u_mg_levels_3_pc_type asm \
+-stokes_fieldsplit_u_mg_levels_3_ksp_type fgmres \
+-stokes_fieldsplit_u_mg_levels_3_ksp_max_it 1 \
+-stokes_fieldsplit_u_mg_levels_3_pc_asm_type restrict \
+-stokes_fieldsplit_u_mg_levels_3_sub_pc_type  ilu \
+-stokes_fieldsplit_u_mg_levels_3_pc_asm_dm_subdomains 1 \
+-stokes_fieldsplit_u_mg_levels_3_pc_asm_overlap 4 \
+-stokes_fieldsplit_u_mg_levels_1_ksp_type chebyshev -stokes_fieldsplit_u_mg_levels_1_ksp_chebyshev_estimate_eigenvalues 0,0.2,0,1.1 -stokes_fieldsplit_u_mg_levels_1_est_ksp_norm_type none \
+-stokes_fieldsplit_u_mg_levels_1_est_ksp_max_it 6 \
+-stokes_fieldsplit_u_mg_levels_1_fieldsplit_0_ksp_max_it 15 \
+-stokes_fieldsplit_u_mg_levels_1_fieldsplit_0_pc_type jacobi -stokes_fieldsplit_u_mg_levels_1_fieldsplit_0_ksp_norm_type none \
+-stokes_fieldsplit_u_mg_levels_2_ksp_type chebyshev -stokes_fieldsplit_u_mg_levels_2_ksp_chebyshev_estimate_eigenvalues 0,0.2,0,1.1 -stokes_fieldsplit_u_mg_levels_2_est_ksp_norm_type none \
+-stokes_fieldsplit_u_mg_levels_2_est_ksp_max_it 6 \
+-stokes_fieldsplit_u_mg_levels_2_fieldsplit_0_ksp_max_it 15 \
+-stokes_fieldsplit_u_mg_levels_2_fieldsplit_0_pc_type jacobi -stokes_fieldsplit_u_mg_levels_2_fieldsplit_0_ksp_norm_type none \
+-da_refine_x 4 -da_refine_y 4 \
+-c_str 2 \
+-mx '$MX' -my '$MY >> petsc_ex43_gcr_test7.batch
+sbatch petsc_ex43_gcr_test7.batch
+rm petsc_ex43_gcr_test7.batch
+fi;
+
+# ===================================================================================================
+# PIPEGCR
+# ===================================================================================================
 # First PIPEGCR test 
 if [ $PGCR1 == true ]; then
 rm -f petsc_ex43_pipegcr_test1.batch
@@ -360,6 +424,63 @@ sbatch petsc_ex43_pipegcr_test6.batch
 rm petsc_ex43_pipegcr_test6.batch
 fi;
 
+# 7th PIPEGCR test using settings suggested by Patrick
+if [ $PGCR7 == true ]; then
+rm -f petsc_ex43_pipegcr_test7.batch
+echo '--Running KSP Tutorial 43 with '$TASKS' MPI process' 
+echo '#!/bin/bash' > petsc_ex43_pipegcr_test7.batch
+echo '#SBATCH --ntasks='$TASKS >> petsc_ex43_pipegcr_test7.batch
+echo '#SBATCH --time='$TIME >> petsc_ex43_pipegcr_test7.batch
+if [ $MACHINENAME == daint ]; then echo '#SBATCH --account=c05'   >> petsc_ex43_pipegcr_test7.batch; fi;
+echo '#SBATCH --output=out/petsc_ex43_pipegcr_test7-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out' >> petsc_ex43_pipegcr_test7.batch
+echo 'aprun -n'$TASKS' -j'$CPUS' -d'$THREADS' ./src/ksp/ksp/examples/tutorials/ex43					\
+-options_left 1 \
+-stokes_ksp_monitor \
+-stokes_ksp_view \
+-stokes_ksp_converged_reason \
+-sinker_eta0 1.0e-2 -sinker_eta1 1.0e2 \
+-stokes_ksp_type pipegcr \
+-stokes_ksp_rtol 1e-06 \
+-stokes_ksp_max_it 399 \
+-stokes_pc_type fieldsplit \
+-stokes_pc_use_amat \
+-stokes_pc_fieldsplit_type schur \
+-stokes_pc_fieldsplit_schur_fact_type upper \
+-stokes_fieldsplit_p_ksp_type preonly \
+-stokes_fieldsplit_p_pc_type bjacobi \
+-stokes_fieldsplit_u_ksp_monitor \
+-stokes_fieldsplit_u_ksp_rtol 1e-1 \
+-stokes_fieldsplit_u_pc_type mg \
+-stokes_fieldsplit_u_pc_mg_log \
+-stokes_fieldsplit_u_mg_coarse_pc_type lu \
+-stokes_fieldsplit_u_mg_coarse_pc_factor_mat_solver_package mumps \
+-stokes_fieldsplit_u_pc_mg_galerkin \
+-stokes_fieldsplit_u_pc_mg_levels 4 \
+-stokes_fieldsplit_u_mg_levels_3_pc_type asm \
+-stokes_fieldsplit_u_mg_levels_3_ksp_type fgmres \
+-stokes_fieldsplit_u_mg_levels_3_ksp_max_it 1 \
+-stokes_fieldsplit_u_mg_levels_3_pc_asm_type restrict \
+-stokes_fieldsplit_u_mg_levels_3_sub_pc_type  ilu \
+-stokes_fieldsplit_u_mg_levels_3_pc_asm_dm_subdomains 1 \
+-stokes_fieldsplit_u_mg_levels_3_pc_asm_overlap 4 \
+-stokes_fieldsplit_u_mg_levels_1_ksp_type chebyshev -stokes_fieldsplit_u_mg_levels_1_ksp_chebyshev_estimate_eigenvalues 0,0.2,0,1.1 -stokes_fieldsplit_u_mg_levels_1_est_ksp_norm_type none \
+-stokes_fieldsplit_u_mg_levels_1_est_ksp_max_it 6 \
+-stokes_fieldsplit_u_mg_levels_1_fieldsplit_0_ksp_max_it 15 \
+-stokes_fieldsplit_u_mg_levels_1_fieldsplit_0_pc_type jacobi -stokes_fieldsplit_u_mg_levels_1_fieldsplit_0_ksp_norm_type none \
+-stokes_fieldsplit_u_mg_levels_2_ksp_type chebyshev -stokes_fieldsplit_u_mg_levels_2_ksp_chebyshev_estimate_eigenvalues 0,0.2,0,1.1 -stokes_fieldsplit_u_mg_levels_2_est_ksp_norm_type none \
+-stokes_fieldsplit_u_mg_levels_2_est_ksp_max_it 6 \
+-stokes_fieldsplit_u_mg_levels_2_fieldsplit_0_ksp_max_it 15 \
+-stokes_fieldsplit_u_mg_levels_2_fieldsplit_0_pc_type jacobi -stokes_fieldsplit_u_mg_levels_2_fieldsplit_0_ksp_norm_type none \
+-da_refine_x 4 -da_refine_y 4 \
+-c_str 2 \
+-mx '$MX' -my '$MY >> petsc_ex43_pipegcr_test7.batch
+sbatch petsc_ex43_pipegcr_test7.batch
+rm petsc_ex43_pipegcr_test7.batch
+fi;
+
+# ===================================================================================================
+# END OF TEST DEFINITIONS
+# ===================================================================================================
 
 echo "--Removing example binaries"
 rm -f src/examples/tutorials/ex43
@@ -373,12 +494,14 @@ if [ $GCR3 == true ]; then echo '  cat out/petsc_ex43_gcr_test3-'$MACHINENAME'-n
 if [ $GCR4 == true ]; then echo '  cat out/petsc_ex43_gcr_test4-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 if [ $GCR5 == true ]; then echo '  cat out/petsc_ex43_gcr_test5-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 if [ $GCR6 == true ]; then echo '  cat out/petsc_ex43_gcr_test6-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
+if [ $GCR7 == true ]; then echo '  cat out/petsc_ex43_gcr_test7-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 if [ $PGCR1 == true ]; then echo '  cat out/petsc_ex43_pipegcr_test1-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 if [ $PGCR2 == true ]; then echo '  cat out/petsc_ex43_pipegcr_test2-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 if [ $PGCR3 == true ]; then echo '  cat out/petsc_ex43_pipegcr_test3-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 if [ $PGCR4 == true ]; then echo '  cat out/petsc_ex43_pipegcr_test4-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 if [ $PGCR5 == true ]; then echo '  cat out/petsc_ex43_pipegcr_test5-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 if [ $PGCR6 == true ]; then echo '  cat out/petsc_ex43_pipegcr_test6-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
+if [ $PGCR7 == true ]; then echo '  cat out/petsc_ex43_pipegcr_test7-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'; fi;
 #echo '  cat out/petsc_ex49_gcr_test1-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'
 #echo '  cat out/petsc_ex49_gcr_test2-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'
 #echo '  cat out/petsc_ex49_pipegcr_test1-'$MACHINENAME'-n'$TASKS'-j'$CPUS'-d'$THREADS'-mx'$MX'-my'$MY'.out'
@@ -388,6 +511,9 @@ GREPSCRIPT='out/grep_petsc_ex43_gcr_'$MACHINENAME'-n'$TASKS'-mx'$MX'-my'$MY'.sh'
 echo "redColor='\033[0;31m'"										>  $GREPSCRIPT
 echo "noColor='\033[0m'"										>> $GREPSCRIPT
 echo 'alias echo="echo -e"'										>> $GREPSCRIPT
+echo 'echo "${redColor}-- CHECKING FOR WARNINGS AND ERRORS${noColor}"'					>> $GREPSCRIPT
+echo 'grep -i -A1 "warning\|error"	out/*gcr*'$MACHINENAME'*'$TASKS'*'$MX'*'$MY'.out'		>> $GREPSCRIPT
+echo 'echo ""'												>> $GREPSCRIPT
 echo 'echo "${redColor}-- TOTAL TIME FOR SOLVE${noColor}"'						>> $GREPSCRIPT
 echo 'grep -A6 "Time (sec):"			out/*gcr*'$MACHINENAME'*'$TASKS'*'$MX'*'$MY'.out'	>> $GREPSCRIPT
 echo 'echo ""'												>> $GREPSCRIPT
@@ -399,6 +525,7 @@ echo 'grep -i -A2 "unused[A-Za-z ]*option."	out/*gcr*'$MACHINENAME'*'$TASKS'*'$M
 echo 'echo ""'												>> $GREPSCRIPT
 echo 'echo "${redColor}-- CONVERGED_REASON${noColor}"'							>> $GREPSCRIPT
 echo 'grep "[CONDI]*VERGED"			out/*gcr*'$MACHINENAME'*'$TASKS'*'$MX'*'$MY'.out'	>> $GREPSCRIPT
+echo 'echo ""'												>> $GREPSCRIPT
 echo ''
 echo "${redColor}Run grep script for viewing timings, potential unused options and converged_reason using${noColor}"
 echo '  . '$GREPSCRIPT
