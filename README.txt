@@ -1,7 +1,7 @@
 To get PETSc running on daint
 
 1) Load up the modules you want. For cray, it might be okay to use the defaults (PrgEnv-cray and cray-mpich). There is also
-    . cray-loadmodules.sh
+    . cray-loadmodules-daint.sh / cray-loadmodules-dora.sh
  For gnu, you can use
     . gnu-loadmodules.sh
 
