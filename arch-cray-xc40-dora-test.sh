@@ -14,22 +14,28 @@ echo '#!/bin/bash' > petsc_ex19_test1.batch
 echo '#SBATCH --ntasks=1' >> petsc_ex19_test1.batch
 echo '#SBATCH --time=00:00:03' >> petsc_ex19_test1.batch
 echo '#SBATCH --output=arch-cray-xc40-dora-test1.out' >> petsc_ex19_test1.batch
+if [ $USER == schnepp ]; then
+  echo '#SBATCH --account=c05' >> petsc_ex19_test1.batch # SMS has use this line
+fi;
 echo 'aprun -n 1 ./src/snes/examples/tutorials/ex19 -da_refine 3 -snes_monitor_short -pc_type mg -ksp_type fgmres -pc_mg_type full' >> petsc_ex19_test1.batch
 sbatch petsc_ex19_test1.batch
 rm petsc_ex19_test1.batch
 
 
- # Second test 
- # (A third test with 2 multithreaded processes, one on each of two nodes, might also be useful)
- rm -f arch-cray-xc40-dora-test2.out petsc_ex19_test2.batch
- echo '--Running SNES Tutorial on with 2 MPI processes (on one node)' 
- echo '#!/bin/bash' > petsc_ex19_test2.batch
- echo '#SBATCH --ntasks=2' >> petsc_ex19_test2.batch
- echo '#SBATCH --time=00:00:03' >> petsc_ex19_test2.batch
- echo '#SBATCH --output=arch-cray-xc40-dora-test2.out' >> petsc_ex19_test2.batch
- echo 'aprun -n 2 ./src/snes/examples/tutorials/ex19 -da_refine 3 -snes_monitor_short -pc_type mg -ksp_type fgmres -pc_mg_type full' >> petsc_ex19_test2.batch
- sbatch petsc_ex19_test2.batch
- rm -f petsc_ex19_test2.batch
+# Second test 
+# (A third test with 2 multithreaded processes, one on each of two nodes, might also be useful)
+rm -f arch-cray-xc40-dora-test2.out petsc_ex19_test2.batch
+echo '--Running SNES Tutorial on with 2 MPI processes (on one node)' 
+echo '#!/bin/bash' > petsc_ex19_test2.batch
+echo '#SBATCH --ntasks=2' >> petsc_ex19_test2.batch
+echo '#SBATCH --time=00:00:03' >> petsc_ex19_test2.batch
+echo '#SBATCH --output=arch-cray-xc40-dora-test2.out' >> petsc_ex19_test2.batch
+if [ $USER == schnepp ]; then
+  echo '#SBATCH --account=c05' >> petsc_ex19_test1.batch # SMS has use this line
+fi;
+echo 'aprun -n 2 ./src/snes/examples/tutorials/ex19 -da_refine 3 -snes_monitor_short -pc_type mg -ksp_type fgmres -pc_mg_type full' >> petsc_ex19_test2.batch
+sbatch petsc_ex19_test2.batch
+rm -f petsc_ex19_test2.batch
 
 echo "--Removing example binary"
 rm -f src/examples/tutorials/ex19
