@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # A convenience script to run the C/C++ tests for this particular architecture. 
 # Note that PETSC_ARCH is hardcoded below
 # The settings have been copied from the runex19 settings at the time of this writing
