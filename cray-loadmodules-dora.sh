@@ -1,4 +1,5 @@
 module unload PrgEnv-gnu
+module unload PrgEnv-intel
 module load PrgEnv-cray
 module unload cray-mpich
 module load cray-mpich/7.0.4
