@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # This a convenience script to submit the job required for PETSc using the batch system. You could also use salloc and aprun, or write your own batch file
 rm -f conftest-arch-cray-xc40-dora.out tmp.batch
 echo '#!/bin/bash'                                        >  tmp.batch
