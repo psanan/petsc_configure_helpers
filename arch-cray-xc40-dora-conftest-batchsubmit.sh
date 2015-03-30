@@ -6,6 +6,9 @@ echo '#!/bin/bash'                                        >  tmp.batch
 echo '#SBATCH --ntasks=1'                                 >> tmp.batch
 echo '#SBATCH --output=conftest-arch-cray-xc40-dora.out'  >> tmp.batch
 echo '#SBATCH --time=00:00:30'                            >> tmp.batch
+if [ $USER == schnepp ]; then
+  echo '#SBATCH --account=c05' >> petsc_ex19_test1.batch # SMS has use this line
+fi;
 echo 'aprun -n 1 ./conftest-arch-cray-xc40-dora'          >> tmp.batch
 sbatch tmp.batch
 echo "To see if this did anything (once the job finishes):"

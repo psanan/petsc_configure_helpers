@@ -36,7 +36,11 @@ configure_options = [
 
   '--with-x=0',
 
-  'PETSC_ARCH=arch-cray-xc40-dora',
+  '--download-scalapack',
+  '--download-mumps',
+  '--download-metis',
+  '--download-parmetis',
+  'PETSC_ARCH=arch-cray-xc40-dora'
   #'--with-blas-lapack-lib=-L/opt/cray...'
 
   ]

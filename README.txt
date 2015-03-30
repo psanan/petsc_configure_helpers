@@ -1,13 +1,14 @@
 To get PETSc running on daint
 
 1) Load up the modules you want. For cray, it might be okay to use the defaults (PrgEnv-cray and cray-mpich). There is also
-    . cray-loadmodules.sh
+    . cray-loadmodules-daint.sh / cray-loadmodules-dora.sh
  For gnu, you can use
     . gnu-loadmodules.sh
 
 2) Configure and build PETSc. For example (with gnu, for cray or a different arch, use the correspondingly-named files)
     git clone https://bitbucket.org/petsc/petsc
     cd petsc
+    set PETSC_DIR and PETSC_ARCH
     python ../petsc_daint_helpers/arch-gnu-xc30-daint.py
     . ../petsc_daint_helpers/arch-gnu-xc30-daint-conftest-batchsubmit.sh
     ./reconfigure-arch-gnu-xc30-daint.py
