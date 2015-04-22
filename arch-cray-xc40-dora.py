@@ -14,6 +14,8 @@ configure_options = [
   '--with-cxx=CC',
   '--with-fc=ftn',
 
+  '--with-64-bit-indices',
+
   #?????? -Wl,--whole-archive,-ldmapp,--no-whole-archive ??????
   #?????? -dynamic
   
@@ -36,10 +38,10 @@ configure_options = [
 
   '--with-x=0',
 
-  '--download-scalapack',
-  '--download-mumps',
-  '--download-metis',
-  '--download-parmetis',
+  #'--download-scalapack',
+  #'--download-mumps',
+  #'--download-metis',
+  #'--download-parmetis',
   'PETSC_ARCH=arch-cray-xc40-dora'
   #'--with-blas-lapack-lib=-L/opt/cray...'
 

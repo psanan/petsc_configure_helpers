@@ -12,6 +12,8 @@ configure_options = [
   '--with-cxx=CC',
   '--with-fc=ftn',
 
+  '--with-64-bit-indices',
+
   '--CFLAGS=-craympich-mt',
   '--CXXFLAGS=-craympich-mt',
 
@@ -27,10 +29,10 @@ configure_options = [
   '--known-mpi-shared-libraries=1',
 
   '--with-x=0',
-  '--download-scalapack',
-  '--download-mumps',
-  '--download-metis',
-  '--download-parmetis',
+  #'--download-scalapack',
+  #'--download-mumps',
+  #'--download-metis',
+  #'--download-parmetis',
 
   'PETSC_ARCH=arch-cray-xc30-daint'
   #'--with-blas-lapack-lib=-L/opt/cray...'
