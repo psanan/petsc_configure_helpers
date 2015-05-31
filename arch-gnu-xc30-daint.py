@@ -1,6 +1,11 @@
 #!/usr/bin/env python
-
+import os
 # make sure to load the correct modules (see gnu-loadmodules.sh)
+
+# Get CUDATOOLKIT_HOME from environment
+CUDATOOLKIT_HOME=os.getenv('CUDATOOLKIT_HOME')
+if not CUDATOOLKIT_HOME :
+  raise Exception("CUDATOOLKIT_HOME not defined in the environment")
 
 configure_options = [
 # On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
@@ -28,7 +33,7 @@ configure_options = [
   '--download-viennacl',
   '--with-opencl=yes',
   '--with-opencl-lib=/opt/cray/nvidia/default/lib64/libOpenCL.so',
-  '--with-opencl-include=/opt/nvidia/cudatoolkit/5.5.20-1.0501.7945.8.2/include',
+  '--with-opencl-include='+CUDATOOLKIT_HOME+'/include',
 
   ]
 

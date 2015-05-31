@@ -1,13 +1,9 @@
 module unload PrgEnv-gnu
 module unload PrgEnv-intel
+module unload PrgEnv-pgi
 module load PrgEnv-cray
 module unload cray-mpich
-module load cray-mpich/7.0.3
+module load cray-mpich/7.2.0
 module load cudatoolkit
 module unload cmake
-module load cmake/2.8.12.2
-module unload craype
-module load craype/2.2.0
-module unload cray-libsci
-module load cray-libsci/13.0.1
 module load python/2.7.6
