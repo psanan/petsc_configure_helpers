@@ -30,7 +30,10 @@ configure_options = [
   'PETSC_ARCH=arch-gnu-xc30-daint',
   #'--with-blas-lapack-lib=-L/opt/cray...'
 
-  '--download-viennacl',
+  #'--download-viennacl',
+  '--with-viennacl=yes',
+  '--with-viennacl-include=~/viennacl-dev',
+  '--with-viennacl-lib= ',
   '--with-opencl=yes',
   '--with-opencl-lib=/opt/cray/nvidia/default/lib64/libOpenCL.so',
   '--with-opencl-include='+CUDATOOLKIT_HOME+'/include',
