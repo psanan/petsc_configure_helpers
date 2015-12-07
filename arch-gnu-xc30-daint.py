@@ -1,18 +1,23 @@
 #!/usr/bin/env python
 import os
-# make sure to load the correct modules (see gnu-loadmodules.sh)
+# make sure to load the correct modules 
+#  module unload PrgEnv-cray && module load PrgEnv-gnu && module load cudatoolkit
+#
 
 # Get CUDATOOLKIT_HOME from environment
 CUDATOOLKIT_HOME=os.getenv('CUDATOOLKIT_HOME')
 if not CUDATOOLKIT_HOME :
-  raise Exception("CUDATOOLKIT_HOME not defined in the environment")
+  raise Exception("CUDATOOLKIT_HOME not defined in the environment. Did you forget to load modules?")
 
 configure_options = [
 # On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
 # Note that we add some flags, OVERRIDING any existing COPTFLAGS ans CXXOPTFLAGS..
   '--with-cc=cc',
   '--with-cxx=CC',
-  '--with-fc=ftn',
+  '--with-fc=0',
+
+  'COPTFLAGS=-O3',
+  'CXXOPTFLAGS=-03'
 
   '--with-clib-autodetect=0',
   '--with-cxxlib-autodetect=0',
@@ -26,17 +31,20 @@ configure_options = [
   '--known-mpi-shared-libraries=1',
 
   '--with-x=0',
+  #'--with-hwloc=0'
 
   'PETSC_ARCH=arch-gnu-xc30-daint',
   #'--with-blas-lapack-lib=-L/opt/cray...'
 
-  #'--download-viennacl',
-  '--with-viennacl=yes',
-  '--with-viennacl-include=~/viennacl-dev',
-  '--with-viennacl-lib= ',
-  '--with-opencl=yes',
-  '--with-opencl-lib=/opt/cray/nvidia/default/lib64/libOpenCL.so',
+  '--with-opencl',
+  '--with-opencl-lib='+CUDATOOLKIT_HOME+'/lib64/libOpenCL.so',
   '--with-opencl-include='+CUDATOOLKIT_HOME+'/include',
+
+  #'--download-viennacl',
+
+  '--with-viennacl=1',
+  '--with-viennacl-include=../viennacl-dev',
+  '--with-viennacl-lib= ',
 
   ]
 

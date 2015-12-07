@@ -3,8 +3,6 @@
 # Do the following before running this configure script [daint.cscs.ch]
 #
 # [Module load PrgEnv-cray]
-# Module load cray-mpich
-# Module load cmake
 
 configure_options = [
 # On cray cc,CC,ftn are equivalent to mpicc,mpiCC,mpif90
@@ -12,10 +10,18 @@ configure_options = [
   '--with-cxx=CC',
   '--with-fc=ftn',
 
-  '--with-64-bit-indices',
+  #'--with-64-bit-indices',
 
-  '--CFLAGS=-craympich-mt',
-  '--CXXFLAGS=-craympich-mt',
+  # This is required to build a static library which can perform asynchronous reductions
+  #  see man mpi for more (on how this works with cray-mpich)
+  #  In particular, note the required environment variables required when running the job
+  '--CFLAGS=-Wl,--whole-archive,-ldmapp,--no-whole-archive',
+  '--CXXFLAGS=-Wl,--whole-archive,-ldmapp,--no-whole-archive',
+
+  # We clear the optimization flags, since the cray compilers turn on most optimizations by default
+  '--COPTFLAGS=',
+  '--CXXOPTFLAGS=',
+  '--FOPTFLAGS=',
 
   '--with-clib-autodetect=0',
   '--with-cxxlib-autodetect=0',
