@@ -14,7 +14,7 @@ configure_options = [
 # Note that we add some flags, OVERRIDING any existing COPTFLAGS ans CXXOPTFLAGS..
   '--with-cc=cc',
   '--with-cxx=CC',
-  '--with-fc=0',
+  '--with-fc=ftn',
 
   'COPTFLAGS=-O3',
   'CXXOPTFLAGS=-03'
@@ -27,7 +27,10 @@ configure_options = [
   '--with-debugging=0',
   '--with-valgrind=0',
 
-  '--with-batch',
+  # Note: this is a batch system, but under the assumption that
+  #       the login nodes are indeed identical to the compute nodes
+  #       (not always true in practice!) then we shouldn't need this
+  #'--with-batch',
   '--known-mpi-shared-libraries=1',
 
   '--with-x=0',

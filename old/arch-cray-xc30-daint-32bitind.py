@@ -3,6 +3,8 @@
 # Do the following before running this configure script [daint.cscs.ch]
 #
 # [Module load PrgEnv-cray]
+# Module load cray-mpich
+# Module load cmake
 
 configure_options = [
 # On cray cc,CC,ftn are equivalent to mpicc,mpiCC,mpif90
@@ -12,16 +14,8 @@ configure_options = [
 
   #'--with-64-bit-indices',
 
-  # This is required to build a static library which can perform asynchronous reductions
-  #  see man mpi for more (on how this works with cray-mpich)
-  #  In particular, note the required environment variables required when running the job
-  '--CFLAGS=-Wl,--whole-archive,-ldmapp,--no-whole-archive',
-  '--CXXFLAGS=-Wl,--whole-archive,-ldmapp,--no-whole-archive',
-
-  # We clear the optimization flags, since the cray compilers turn on most optimizations by default
-  '--COPTFLAGS=',
-  '--CXXOPTFLAGS=',
-  '--FOPTFLAGS=',
+  '--CFLAGS=-craympich-mt',
+  '--CXXFLAGS=-craympich-mt',
 
   '--with-clib-autodetect=0',
   '--with-cxxlib-autodetect=0',
@@ -31,7 +25,7 @@ configure_options = [
   '--with-debugging=0',
   '--with-valgrind=0',
 
-  #'--with-batch',
+  '--with-batch',
   '--known-mpi-shared-libraries=1',
 
   '--with-x=0',
@@ -40,7 +34,7 @@ configure_options = [
   #'--download-metis',
   #'--download-parmetis',
 
-  'PETSC_ARCH=arch-cray-xc30-daint'
+  'PETSC_ARCH=arch-cray-xc30-daint-32bitind'
   #'--with-blas-lapack-lib=-L/opt/cray...'
 
   ]
