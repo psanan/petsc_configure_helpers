@@ -18,10 +18,19 @@ configure_options = [
 
   'COPTFLAGS=-O3',
   'CXXOPTFLAGS=-03'
+  'FOPTFLAGS=-03'
 
   '--with-clib-autodetect=0',
   '--with-cxxlib-autodetect=0',
   '--with-fortranlib-autodetect=0',
+
+  '--download-mumps',
+  '--download-ptscotch',
+  '--download-metis',
+  '--download-parmetis',
+  '--download-scalapack',
+
+  '--download-suitesparse',
 
   '--with-shared-libraries=0',
   '--with-debugging=0',
