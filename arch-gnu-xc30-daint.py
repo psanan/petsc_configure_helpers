@@ -24,11 +24,11 @@ configure_options = [
   '--with-cxxlib-autodetect=0',
   '--with-fortranlib-autodetect=0',
 
-  '--download-mumps',
-  '--download-ptscotch',
-  '--download-metis',
-  '--download-parmetis',
-  '--download-scalapack',
+#  '--download-mumps',
+#  '--download-ptscotch',
+#  '--download-metis',
+#  '--download-parmetis',
+#  '--download-scalapack',
 
   '--download-suitesparse',
 
