@@ -11,8 +11,13 @@ To get PETSc running on daint
     make PETSC_ARCH=arch-gnu-xc30-daint PETSC_DIR=$PWD
     . ../CSCS_petsc_helpers/arch-gnu-xc30-daint-test.sh
 
+
+
+
+
+
 ----------------------------------------------------------
-OLD:
+OLD :
  3) To test GPU subsolves, you can do something like
     [set up a remote, check out psanan/pc-asm-sub-type]
     make
