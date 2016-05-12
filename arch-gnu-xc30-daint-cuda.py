@@ -53,7 +53,7 @@ configure_options = [
   # things like MPI headers, but nvcc
   # doesn't have them, so we add them
   # manually here:
-  '--CUDAFLAGS=-I'+MPICH_DIR+'/include/'
+  '--CUDAFLAGS=-I'+MPICH_DIR+'/include/',
   
 
   ]
