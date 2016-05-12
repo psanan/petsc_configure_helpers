@@ -9,6 +9,9 @@ CUDATOOLKIT_HOME=os.getenv('CUDATOOLKIT_HOME')
 if not CUDATOOLKIT_HOME :
   raise Exception("CUDATOOLKIT_HOME not defined in the environment. Did you forget to load modules?")
 
+# Get MPICH DIR from the environment (see note below about nvcc)
+MPICH_DIR=os.getenv('MPICH_DIR')
+
 configure_options = [
 # On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
 # Note that we add some flags, OVERRIDING any existing COPTFLAGS ans CXXOPTFLAGS..
@@ -45,6 +48,12 @@ configure_options = [
   '--with-cuda=1',
   '--with-cuda-arch=sm_35',
   '--with-cuda-dir='+CUDATOOLKIT_HOME,
+
+  # The cc/CC/ftn compiler wrappers provide
+  # things like MPI headers, but nvcc
+  # doesn't have them, so we add them
+  # manually here:
+  '--CUDAFLAGS=-I'+MPICH_DIR+'/include/'
   
 
   ]
