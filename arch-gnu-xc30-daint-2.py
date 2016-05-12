@@ -30,8 +30,6 @@ configure_options = [
 #  '--download-parmetis',
 #  '--download-scalapack',
 
-  '--download-suitesparse',
-
   '--with-shared-libraries=0',
   '--with-debugging=0',
   '--with-valgrind=0',
