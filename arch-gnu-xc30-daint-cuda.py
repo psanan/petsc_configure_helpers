@@ -14,7 +14,7 @@ MPICH_DIR=os.getenv('MPICH_DIR')
 
 configure_options = [
 # On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
-# Note that we add some flags, OVERRIDING any existing COPTFLAGS ans CXXOPTFLAGS..
+# Note that we add some flags, OVERRIDING any existing COPTFLAGS and CXXOPTFLAGS..
   '--with-cc=cc',
   '--with-cxx=CC',
   '--with-fc=ftn',
