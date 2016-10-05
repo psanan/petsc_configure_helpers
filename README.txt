@@ -1,3 +1,5 @@
+This repository stores PETSc configure and test scripts for various clusters. (Originally all at CSCS, hence the name of the repository!)
+
 To get PETSc running on daint
 
 1) Load up the modules you want. For cray, it might be okay to use the defaults (PrgEnv-cray and cray-mpich). You may also want cudatoolkit or cmake.
