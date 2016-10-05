@@ -7,8 +7,9 @@
 #
 #    git clone git@bitbucket.org:petsc/petsc -b maint
 #
-# 2. Load required modules (assuming you want GCC compilers and OpenMPI, and that openBLAS is loaded by default).
+# 2. Load required modules (assuming you want GCC compilers and OpenMPI)
 #
+#    module load openblas
 #    module load gcc
 #    module load open_mpi
 #
