@@ -7,7 +7,7 @@
 #
 #    git clone git@bitbucket.org:petsc/petsc -b maint
 #
-# 2. Load required modules (assuming you want GCC compilers and OpenMPI)
+# 2. Load required modules (assuming you want GCC compilers and OpenMPI). The order matters.
 #
 #    module load openblas
 #    module load gcc
@@ -43,14 +43,6 @@
 #
 # Last updated 2016.10.5 by Patrick Sanan (patrick.sanan@erdw.ethz.ch)
 #
-# Do the following before running this configure script
-# IN THIS ORDER (mpi must be after the compiler)
-#
-# module load python/2.7.6
-# module load gcc
-# module load open_mpi
-#
-# It is also assumed that you have the openblas module loaded
 
 configure_options = [
   #'--with-cc=mpicc',
