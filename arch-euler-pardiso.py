@@ -1,38 +1,29 @@
 #!/usr/bin/env python
-#
+
 #    module load python/2.7.6
-#    module unload openblas
-#    module load intel
+#    module load openblas
+#    module load gcc
 #    module load open_mpi
+
 import sys,os
 
-MKLROOT=os.getenv('MKLROOT')
-
 configure_options = [
-  '--with-cc=mpicc',
-  '--with-cxx=mpiCC',
-  '--with-fc=0',
-
-  '--COPTFLAGS=-O3 -march=native -openmp',
-  '--CXXOPTFLAGS=-O3 -march=native -openmp',
-  #'--FOPTFLAGS=-O3 -march=native',
-
-  #'--with-clib-autodetect=0',
-  #'--with-cxxlib-autodetect=0',
-  #'--with-fortranlib-autodetect=0',
+  '--COPTFLAGS=-O3 -march=native',
+  '--CXXOPTFLAGS=-O3 -march=native',
+  '--FOPTFLAGS=-O3 -march=native',
 
   '--with-shared-libraries=0',
   '--with-debugging=0',
   '--with-valgrind=0',
   '--with-x=0',
-  '--with-sowing=0',
 
   '--with-batch',
   '--known-mpi-shared-libraries=1',
 
-  '--with-blas-lapack-dir=' + MKLROOT,
+  '--with-blas-lapack-lib=-lopenblas',
+
   '--with-pardiso=1',
-  '--with-pardiso-lib=/cluster/home/pasanan/libpardiso500-GNU481-X86-64.so'
+  '--with-pardiso-lib=/cluster/home/pasanan/pardiso/libpardiso.so', # must be sym linked to the GNU481 version!!
   '--with-openmp',
 
   'PETSC_ARCH=arch-euler-pardiso',
