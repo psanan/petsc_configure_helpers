@@ -75,6 +75,13 @@ configure_options = [
   '--with-mkl_pardiso-dir=' + MKLROOT,
   '--with-openmp',
 
+  '--download-suitesparse',
+  '--download-superlu',
+  '--download-scalapack',
+  '--download-mumps',
+  '--download-metis',
+  '--download-parmetis',
+
   'PETSC_ARCH=arch-euler-intel',
 
   ]

@@ -69,11 +69,6 @@ configure_options = [
   '--with-blas-lapack-lib=-lopenblas',
 
   '--download-suitesparse',
-  '--download-superlu',
-  #'--download-scalapack',
-  #'--download-mumps',
-  #'--download-metis',
-  #'--download-parmetis',
 
   'PETSC_ARCH=arch-euler',
 
