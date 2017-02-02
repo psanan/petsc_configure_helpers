@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# !!!!!!!!!! NEEDS TO BE UPDATED !!!!!!!!!
+
 import os
 # make sure to load the correct modules 
 #  module unload PrgEnv-cray && module load PrgEnv-gnu && module load cudatoolkit
