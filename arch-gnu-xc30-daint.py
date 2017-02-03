@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 
-# !!!!!!!!!! NEEDS TO BE UPDATED !!!!!!!!!
-
 import os
 # make sure to load the correct modules 
 #  module unload PrgEnv-cray && module load PrgEnv-gnu && module load cudatoolkit
-#
 
 # Get CUDATOOLKIT_HOME from environment
 CUDATOOLKIT_HOME=os.getenv('CUDATOOLKIT_HOME')
@@ -19,19 +16,13 @@ configure_options = [
   '--with-cxx=CC',
   '--with-fc=ftn',
 
-  'COPTFLAGS=-O3',
-  'CXXOPTFLAGS=-03'
-  'FOPTFLAGS=-03'
+  'COPTFLAGS=',
+  'CXXOPTFLAGS='
+  'FOPTFLAGS=',
 
-  '--with-clib-autodetect=0',
-  '--with-cxxlib-autodetect=0',
-  '--with-fortranlib-autodetect=0',
-
-#  '--download-mumps',
-#  '--download-ptscotch',
-#  '--download-metis',
-#  '--download-parmetis',
-#  '--download-scalapack',
+  #'--with-clib-autodetect=0',
+  #'--with-cxxlib-autodetect=0',
+  #'--with-fortranlib-autodetect=0',
 
   '--download-suitesparse',
 

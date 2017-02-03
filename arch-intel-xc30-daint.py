@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
-# !!!!!!!!!!!!!! NEEDS TO BE UPDATED !!!!!!!!!!!!
 
 # Do the following before running this configure script [daint.cscs.ch]
 #
 #   module unload PrgEnv-cray
 #   module load PrgEnv-intel
-#   module load cmake
 
 import os
 
