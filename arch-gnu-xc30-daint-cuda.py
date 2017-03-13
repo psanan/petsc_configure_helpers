@@ -23,7 +23,7 @@ configure_options = [
   '--with-fc=ftn',
 
   'COPTFLAGS=-O3',
-  'CXXOPTFLAGS=-03'
+  'CXXOPTFLAGS=-03',
   'FOPTFLAGS=-03'
 
   '--with-clib-autodetect=0',

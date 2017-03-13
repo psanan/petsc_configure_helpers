@@ -17,7 +17,7 @@ configure_options = [
   '--with-fc=ftn',
 
   'COPTFLAGS=',
-  'CXXOPTFLAGS='
+  'CXXOPTFLAGS=',
   'FOPTFLAGS=',
 
   #'--with-clib-autodetect=0',
@@ -25,6 +25,7 @@ configure_options = [
   #'--with-fortranlib-autodetect=0',
 
   '--download-suitesparse',
+  '--download-yaml',
 
   '--with-shared-libraries=0',
   '--with-debugging=0',
