@@ -2,12 +2,17 @@
 
 import os
 # make sure to load the correct modules 
+#  module unload PrgEnv-cray && module load PrgEnv-gnu
+# 
+# OR 
+#
 #  module unload PrgEnv-cray && module load PrgEnv-gnu && module load cudatoolkit
 
+
 # Get CUDATOOLKIT_HOME from environment
-CUDATOOLKIT_HOME=os.getenv('CUDATOOLKIT_HOME')
-if not CUDATOOLKIT_HOME :
-  raise Exception("CUDATOOLKIT_HOME not defined in the environment. Did you forget to load modules?")
+#CUDATOOLKIT_HOME=os.getenv('CUDATOOLKIT_HOME')
+#if not CUDATOOLKIT_HOME :
+#  raise Exception("CUDATOOLKIT_HOME not defined in the environment. Did you forget to load modules?")
 
 configure_options = [
 # On cray cc,CC,ftn are eqivalent to mpicc,mpiCC,mpif90
@@ -43,15 +48,15 @@ configure_options = [
   'PETSC_ARCH=arch-gnu-xc30-daint',
   #'--with-blas-lapack-lib=-L/opt/cray...'
 
-  '--with-opencl',
-  '--with-opencl-lib='+CUDATOOLKIT_HOME+'/lib64/libOpenCL.so',
-  '--with-opencl-include='+CUDATOOLKIT_HOME+'/include',
+  #'--with-opencl',
+  #'--with-opencl-lib='+CUDATOOLKIT_HOME+'/lib64/libOpenCL.so',
+  #'--with-opencl-include='+CUDATOOLKIT_HOME+'/include',
 
   #'--download-viennacl',
 
-  '--with-viennacl=1',
-  '--with-viennacl-include=../viennacl-dev',
-  '--with-viennacl-lib= ',
+  #'--with-viennacl=1',
+  #'--with-viennacl-include=../viennacl-dev',
+  #'--with-viennacl-lib= ',
 
   ]
 
