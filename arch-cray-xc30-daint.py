@@ -39,6 +39,7 @@ configure_options = [
   #'--download-mumps',
   #'--download-metis',
   #'--download-parmetis',
+  '--download-suitesparse',
 
   'PETSC_ARCH=arch-cray-xc30-daint'
   #'--with-blas-lapack-lib=-L/opt/cray...'
