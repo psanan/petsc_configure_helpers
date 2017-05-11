@@ -1,14 +1,20 @@
-This repository stores PETSc configure and test scripts for various clusters. 
+This repository stores some convenience scripts to help with PETSc configuration.
 
-To get PETSc running on Piz Daint
+### Local ###
+See `petsc_configure_XXX.sh`. Usage is something like this (but this hasn't been tested):
 
-1) Load up the modules you want. For cray, it might be okay to use the defaults (PrgEnv-cray and cray-mpich). You may also want cudatoolkit or cmake.
+    git clone https://bitbucket.org/petsc/petsc -b maint petsc-maint
+    ARCHMOD=maint DEBUG=0 EXTRA=1 ~/petsc_configure_helpers/petsc_configure_osx.sh
 
-2) Configure and build PETSc. For example (with gnu, for cray or a different arch, use the correspondingly-named files)
-    git clone https://bitbucket.org/petsc/petsc
+### Clusters ###
+See `arch-xxx.py`. Usage is something like this (but this hasn't been tested):
+
+    module unload PrgEnv-cray
+    module load PrgEnv-gnu
+    git clone https://bitbucket.org/petsc/petsc -b maint petsc-maint
     cd petsc
-    export PETSC_DIR=xxxxxxxxx
-    export PETS_ARCH=xxxxxxxxx
-    python ../CSCS_petsc_helpers/arch-gnu-xc30-daint.py
-    make PETSC_ARCH=arch-gnu-xc30-daint PETSC_DIR=$PWD
-    . ../CSCS_petsc_helpers/arch-gnu-xc30-daint-test.sh
+    unset PETSC_DIR
+    unset PETSC_ARCH
+    python ~/petsc_configure_helpers/arch-gnu-xc30-daint.py
+    make
+    . ~/petsc_configure_helpers/arch-gnu-xc30-daint-test.sh
