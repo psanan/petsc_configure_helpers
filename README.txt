@@ -1,5 +1,7 @@
 This repository stores some convenience scripts to help with PETSc configuration.
 
+It is NOT very well-maintained at the moment.
+
 ### Local ###
 See `petsc_configure_XXX.sh`. Usage is something like this (but this hasn't been tested):
 
