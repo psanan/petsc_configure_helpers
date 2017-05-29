@@ -20,3 +20,9 @@ See `arch-xxx.py`. Usage is something like this (but this hasn't been tested):
     python ~/petsc_configure_helpers/arch-gnu-xc30-daint.py
     make
     . ~/petsc_configure_helpers/arch-gnu-xc30-daint-test.sh
+
+### KNL
+For future use, Satish mentioned something like this on the PETSc mailing list
+
+    COPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512" CXXOPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512" FOPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512
+
