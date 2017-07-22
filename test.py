@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ################################################################################
 # Test with pyTestHarness (bitbucket.org/dmay/pythontestharness)               #
-################################################################################
+#------------------------------------------------------------------------------#
 # This is supposed to work with any PETSC_DIR and PETSC_ARCH, on any system!   #
 # Tests are taken from PETSc's "make test" as of 2017.07.22                    #
 ################################################################################
@@ -18,7 +18,7 @@ except ImportError :
     print("pyTestHarness was not found. Exiting.")
     print("If you already have this somewhere on your system, add pythontestharness/lib to your PYTHONPATH.")
     print("Otherwise, you may clone as follows:")
-    print("  git clone https://bitbucket.org/dmay/pythontestharness " + os.path.join(srcDir,'tests','pythontestharness'))
+    print("  git clone https://bitbucket.org/dmay/pythontestharness " + os.path.join(srcDir,'pythontestharness'))
     print("********************")
     sys.exit(1)
 
@@ -42,6 +42,7 @@ def main():
 
 #------------------------------------------------------------------------------#
 def ex19test(ranks) :
+  testName = 'ex19'+'_'+str(ranks)
   launch = os.path.join(SNESExDir,'ex19') + ' -da_refine 3 -snes_monitor_short -pc_type mg -ksp_type fgmres -pc_mg_type full'
   expected_file = os.path.join(srcDir,'ex19.expected')
 
@@ -51,7 +52,7 @@ def ex19test(ranks) :
     test.compareFloatingPoint('2 SNES Function norm ',1.0e-5)
     test.compareInteger('Number of SNES iterations ',0)
 
-  test = pthtest.Test('ex19',ranks,launch,expected_file)
+  test = pthtest.Test(testName,ranks,launch,expected_file)
   test.setVerifyMethod(comparefunc)
   return(test)
   pass
