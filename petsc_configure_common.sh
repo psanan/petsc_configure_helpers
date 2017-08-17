@@ -133,10 +133,11 @@ else
   C2HTML_OPTS="-with-c2html=0"
 fi
 
+SUITESPARSE_OPTS=""
 if [[ $USE_SUITESPARSE == 1 ]]; then
+if [[ $PRECISION -ne "__float128" ]]; then
   SUITESPARSE_OPTS="--download-suitesparse"
-else
-  SUITESPARSE_OPTS=""
+fi
 fi
 
 # The spaces at the ends of the lines are important.
