@@ -43,7 +43,7 @@ configure_options = [
   '--with-mkl_pardiso-dir='+MKLROOT,
 
 
-  'PETSC_ARCH=arch-intel-xc30-daint',
+  'PETSC_ARCH=arch-intel-xc50-daint',
 
   ]
 

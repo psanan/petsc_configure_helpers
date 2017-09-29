@@ -44,7 +44,7 @@ configure_options = [
   '--with-x=0',
   #'--with-hwloc=0'
 
-  'PETSC_ARCH=arch-gnu-xc30-daint-cuda',
+  'PETSC_ARCH=arch-gnu-xc50-daint-cuda',
   #'--with-blas-lapack-lib=-L/opt/cray...'
 
 

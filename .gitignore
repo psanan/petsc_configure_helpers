@@ -2,3 +2,4 @@ pth*.conf
 *.swp
 *.DS_Store
 pythontestharness
+*sandbox*
