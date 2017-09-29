@@ -24,6 +24,6 @@ See `arch-xxx.py`. Example usage (untested) :
     ~/petsc_configure_helpers/test.py -p
 
 ### KNL
-For future use, Satish mentioned something like this on the PETSc mailing list
+For future use, Satish mentioned something like this on the PETSc mailing list (and see `arch-linux-knl.py` in latest PETSc)
 
     COPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512" CXXOPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512" FOPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512

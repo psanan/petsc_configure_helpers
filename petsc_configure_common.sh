@@ -70,7 +70,7 @@ VIENNACL_DEV=${VIENNACL_DEV:-0}
 # Set to 1 to add a common set of external solvers
 EXTRA=${EXTRA:-0}
 if [ "$EXTRA" == 1 ]; then
-  EXTRAOPTS=" --download-suitesparse --download-hdf5 --download-sundials --download-scalapack --download-metis --download-parmetis --download-ptscotch --download-mumps --download-sundials "
+  EXTRAOPTS=" --download-suitesparse --download-hdf5 --download-sundials --download-scalapack --download-metis --download-parmetis --download-ptscotch --download-mumps --download-sundials --download-triangle " 
   PETSC_ARCH+=-extra
 else
   EXTRAOPTS=""
@@ -133,10 +133,11 @@ else
   C2HTML_OPTS="-with-c2html=0"
 fi
 
+SUITESPARSE_OPTS=""
 if [[ $USE_SUITESPARSE == 1 ]]; then
+if [[ $PRECISION -ne "__float128" ]]; then
   SUITESPARSE_OPTS="--download-suitesparse"
-else
-  SUITESPARSE_OPTS=""
+fi
 fi
 
 # The spaces at the ends of the lines are important.
