@@ -70,7 +70,7 @@ VIENNACL_DEV=${VIENNACL_DEV:-0}
 # Set to 1 to add a common set of external solvers
 EXTRA=${EXTRA:-0}
 if [ "$EXTRA" == 1 ]; then
-  EXTRAOPTS=" --download-suitesparse --download-hdf5 --download-sundials --download-scalapack --download-metis --download-parmetis --download-ptscotch --download-mumps --download-sundials --download-triangle " 
+  EXTRAOPTS=" --download-suitesparse --download-hdf5 --download-sundials --download-scalapack --download-metis --download-parmetis --download-ptscotch --download-mumps --download-sundials --download-triangle --download-exodusii --download-netcdf --download-chaco" 
   PETSC_ARCH+=-extra
 else
   EXTRAOPTS=""
