@@ -19,9 +19,9 @@ See `arch-xxx.py`. Example usage (untested) :
     python ~/petsc_configure_helpers/arch-cray-xc50-daint.py
     make
     git clone https://bitbucket.org/dmay/pythontestharness
-    ~/petsc_configure_helpers/test.py -s    # wait for jobs to finish
-    ~/petsc_configure_helpers/test.py -s -v
-    ~/petsc_configure_helpers/test.py -s -p
+    ~/petsc_configure_helpers/test.py    # wait for jobs to finish
+    ~/petsc_configure_helpers/test.py -v
+    ~/petsc_configure_helpers/test.py -p
 
 ### KNL
 For future use, Satish mentioned something like this on the PETSc mailing list (and see `arch-linux-knl.py` in latest PETSc)

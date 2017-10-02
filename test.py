@@ -54,6 +54,7 @@ def ex19test(ranks) :
 
   test = pthtest.Test(testName,ranks,launch,expected_file)
   test.setVerifyMethod(comparefunc)
+  test.setUseSandbox()
   return(test)
   pass
 
