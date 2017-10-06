@@ -3,9 +3,9 @@
 
 configure_options = [
 
-  '--COPTFLAGS=-O3 -march=native',
-  '--CXXOPTFLAGS=-O3 -march=native',
-  '--FOPTFLAGS=-O3 -march=native',
+  '--COPTFLAGS=-O3 -march=native -mtune=native',
+  '--CXXOPTFLAGS=-O3 -march=native -mtune=native',
+  '--FOPTFLAGS=-O3 -march=native -mtune=native',
 
   '--with-shared-libraries=0',
   '--with-debugging=0',
@@ -23,6 +23,10 @@ configure_options = [
   '--download-mumps',
   '--download-metis',
   '--download-parmetis',
+  '--download-exodusii',
+  '--download-chaco',
+  '--download-netcdf',
+  '--download-hdf5',
 
   'PETSC_ARCH=arch-euler-extra',
 
