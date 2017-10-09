@@ -97,10 +97,10 @@ MYCXX=${MYCXX:-g++}
 MYFC=${MYFC:-gfortran}
 
 # BLAS/LAPACK
-DOWNLOAD_BLASLAPACK={$DOWNLOAD_BLASLAPACK:-1}
+DOWNLOAD_BLASLAPACK=${DOWNLOAD_BLASLAPACK:-1}
 
 # MPI
-DOWNLOAD_MPICH={$DOWNLOAD_MPICH:-1}
+DOWNLOAD_MPICH=${DOWNLOAD_MPICH:-1}
 
 #########################################################################################
 
@@ -158,7 +158,7 @@ else
     OPTFLAGS=
 fi
 
-if [ "$DOWNLOAD_MPICH" == "1" ];then
+if [ "$DOWNLOAD_MPICH" == "1" ]; then
   MPI_OPTS=" --download-mpich"
 else
   MPI_OPTS=""
@@ -174,7 +174,7 @@ PETSC_ARCH=$PETSC_ARCH \
 --with-cc=$MYCC \
 --with-cxx=$MYCXX \
 --with-fc=$MYFC \
---$MPI_OPTS \
+$MPI_OPTS \
 --download-yaml \
 $BLAS_LAPACK_OPTS \
 $OPTFLAGS \
