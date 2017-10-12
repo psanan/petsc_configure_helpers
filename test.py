@@ -3,7 +3,6 @@
 # Test with pyTestHarness (bitbucket.org/dmay/pythontestharness)               #
 #------------------------------------------------------------------------------#
 # This is supposed to work with any PETSC_DIR and PETSC_ARCH, on any system!   #
-# Tests are taken from PETSc's "make test" as of 2017.07.22                    #
 ################################################################################
 
 import os
@@ -24,13 +23,15 @@ except ImportError :
 
 PETSC_DIR = os.environ.get('PETSC_DIR')
 PETSC_ARCH = os.environ.get('PETSC_ARCH')
-if not PETSC_DIR or not PETSC_ARCH :
-  raise Exception('You must define PETSC_ARCH and PETSC_DIR to correspond to a working PETSc build')
-SNESExDir = os.path.join(PETSC_DIR,'src','snes','examples','tutorials')
+PETSC_SRC_DIR = os.environ.get('PETSC_SRC_DIR') # to get executables from
+if not PETSC_DIR or not (PETSC_ARCH or PETSC_SRC_DIR) :
+  raise Exception('You must define PETSC_DIR and one of PETSC_ARCH or PETSC_SRC_DIR (to get example with prefix build)')
+SNESExDir = os.path.join(PETSC_SRC_DIR,'src','snes','examples','tutorials')
+if not PETSC_SRC_DIR :
+  PETSC_SRC_DIR = PETSC_DIR
 
 #------------------------------------------------------------------------------#
 def main():
-  SNESExDir = os.path.join(PETSC_DIR,'src','snes','examples','tutorials')
   os.system('make -C ' +  SNESExDir + ' clean')
   os.system('make -C ' +  SNESExDir + ' ex19')
 
