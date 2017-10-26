@@ -96,18 +96,26 @@ MYCC=${MYCC:-gcc}
 MYCXX=${MYCXX:-g++}
 MYFC=${MYFC:-gfortran}
 
+# BLAS/LAPACK
+DOWNLOAD_BLASLAPACK=${DOWNLOAD_BLASLAPACK:-1}
+
+# MPI
+DOWNLOAD_MPICH=${DOWNLOAD_MPICH:-1}
+
 #########################################################################################
 
 echo PETSC_DIR=$PETSC_DIR
 echo PETSC_ARCH=$PETSC_ARCH
 
 # Use PRECISION to choose an appropriate BLAS/LAPACK
+if [ "DOWNLOAD_BLASLAPACK" == "1" ]; then
 if [ "$PRECISION" == "double" ]; then
-    BLAS_LAPACK=" --download-fblaslapack "
+    BLAS_LAPACK_OPTS=" --download-fblaslapack "
 elif [ "$PRECISION" == "single" ]; then
-    BLAS_LAPACK=" --download-fblaslapack "
+    BLAS_LAPACK_OPTS=" --download-fblaslapack "
 elif [ "$PRECISION" == "__float128" ]; then
-    BLAS_LAPACK=" --download-f2cblaslapack "
+    BLAS_LAPACK_OPTS=" --download-f2cblaslapack "
+fi
 fi
 
 # Note that this is a bit non-intuitive using viennacl-dev, as we specify an empty lib location
@@ -150,6 +158,12 @@ else
     OPTFLAGS=
 fi
 
+if [ "$DOWNLOAD_MPICH" == "1" ]; then
+  MPI_OPTS=" --download-mpich"
+else
+  MPI_OPTS=""
+fi
+
 # The spaces at the ends of the lines are important.
 OPTS=" \
 PETSC_DIR=$PETSC_DIR \
@@ -160,9 +174,9 @@ PETSC_ARCH=$PETSC_ARCH \
 --with-cc=$MYCC \
 --with-cxx=$MYCXX \
 --with-fc=$MYFC \
---download-mpich \
+$MPI_OPTS \
 --download-yaml \
-$BLAS_LAPACK \
+$BLAS_LAPACK_OPTS \
 $OPTFLAGS \
 $VIENNACL_OPTS \
 $C2HTML_OPTS \
