@@ -138,7 +138,7 @@ else
 fi
 
 if [ "$EXTRA" == 1 ]; then
-  EXTRA_OPTS=" --download-hdf5 --download-scalapack --download-metis --download-parmetis --download-ptscotch --download-mumps --download-triangle --download-exodusii --download-netcdf --download-chaco"
+  EXTRA_OPTS=" --download-hdf5 --download-scalapack --download-metis --download-parmetis --download-ptscotch --download-mumps --download-superlu_dist --download-triangle --download-exodusii --download-netcdf --download-chaco --download-med"
   if [ "$PRECISION" == "double" ]; then
     EXTRA_OPTS+=" --download-sundials "
   fi
