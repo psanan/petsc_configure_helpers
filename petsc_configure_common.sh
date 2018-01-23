@@ -134,7 +134,7 @@ else
 fi
 
 if [ "$USE_C2HTML" == "1" ]; then
-  C2HTML_OPTS=""
+  C2HTML_OPTS="--download-c2html"
 else
   C2HTML_OPTS="-with-c2html=0"
 fi
@@ -146,7 +146,7 @@ else
 fi
 
 if [ "$EXTRA" == "1" ]; then
-  EXTRA_OPTS=" --download-yaml --download-hdf5 --download-scalapack --download-metis --download-parmetis --download-ptscotch --download-mumps --download-superlu_dist --download-triangle --download-exodusii --download-netcdf --download-chaco --download-ctetgen"
+  EXTRA_OPTS=" --download-yaml --download-hdf5 --download-scalapack --download-metis --download-parmetis --download-mumps --download-superlu_dist --download-triangle --download-ctetgen"
   if [ "$PRECISION" == "double" ]; then
     EXTRA_OPTS+=" --download-sundials "
   fi
