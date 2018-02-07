@@ -11,7 +11,7 @@ See `petsc_configure_xxx.sh`. Usage is something like this (but this hasn't been
 ### Clusters ###
 See `arch-xxx.py`. Example usage (untested) :
 
-    module load PrgEnv-cray 
+    module load PrgEnv-cray
     git clone https://bitbucket.org/petsc/petsc -b maint petsc-maint
     cd petsc-maint
     unset PETSC_DIR

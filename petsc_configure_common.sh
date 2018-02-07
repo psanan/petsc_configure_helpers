@@ -10,7 +10,7 @@
 #     EXTRA=1 ARCHMOD=maint /path/to/here/petsc_configure_common.sh
 #
 # You can also provide things like PRECISION, SCALARTYPE, etc.
-# You can directly pass any other flags you'd like with the EXTRAFLAGS variable
+# You can directly pass any other flags you'd like with the CUSTOMS_OPTS variable
 #
 # I typically do not invoke this script directly,
 # but rather use petsc_configure_xxx.sh which sets ARCHNAME
@@ -134,7 +134,7 @@ else
 fi
 
 if [ "$USE_C2HTML" == "1" ]; then
-  C2HTML_OPTS=""
+  C2HTML_OPTS="--download-c2html"
 else
   C2HTML_OPTS="-with-c2html=0"
 fi
@@ -145,8 +145,8 @@ else
   SUITESPARSE_OPTS=""
 fi
 
-if [ "$EXTRA" == 1 ]; then
-  EXTRA_OPTS=" --download-hdf5 --download-scalapack --download-metis --download-parmetis --download-ptscotch --download-mumps --download-triangle --download-exodusii --download-netcdf --download-chaco"
+if [ "$EXTRA" == "1" ]; then
+  EXTRA_OPTS=" --download-yaml --download-hdf5 --download-scalapack --download-metis --download-parmetis --download-mumps --download-superlu_dist --download-triangle --download-ctetgen"
   if [ "$PRECISION" == "double" ]; then
     EXTRA_OPTS+=" --download-sundials "
   fi
@@ -175,14 +175,13 @@ PETSC_ARCH=$PETSC_ARCH \
 --with-cxx=$MYCXX \
 --with-fc=$MYFC \
 $MPI_OPTS \
---download-yaml \
 $BLAS_LAPACK_OPTS \
 $OPTFLAGS \
 $VIENNACL_OPTS \
 $C2HTML_OPTS \
 $SUITESPARSE_OPTS \
 $EXTRA_OPTS \
-$EXTRAFLAGS \
+$CUSTOM_OPTS \
 "
 echo "Configuring with options:"
 echo $OPTS
