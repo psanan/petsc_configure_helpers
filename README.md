@@ -1,8 +1,8 @@
 # PETSc Configure Helpers
-This repository stores some convenience scripts to help with PETSc configuration.
+Convenience scripts to help with PETSc configuration.
 
 ### Local ###
-See `petsc_configure_xxx.sh`. Usage is something like this (but this hasn't been tested):
+See `petsc_configure_xxx.sh`. Example usage (untested):
 
     git clone https://bitbucket.org/petsc/petsc -b maint petsc-maint
     cd petsc-maint
