@@ -153,7 +153,7 @@ if [ "$EXTRA" == "1" ]; then
 fi
 
 if [ "$DEBUG" == "0" ]; then
-    OPTFLAGS="--COPTFLAGS=\"-g -O3 -march=native -mtune=native \" --CXXOPTFLAGS=\"-g -O3 -march=native -mtune=native \" --FOPTFLAGS=\"-g -O3 -march=native -mtune=native \""
+    OPTFLAGS="--COPTFLAGS=\"-g -O3 -march=native \" --CXXOPTFLAGS=\"-g -O3 -march=native \" --FOPTFLAGS=\"-g -O3 -march=native \""
 else
     OPTFLAGS=
 fi
