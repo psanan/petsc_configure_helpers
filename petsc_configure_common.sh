@@ -46,7 +46,7 @@ elif [ "$PRECISION" == "single" ]; then
 elif [ "$PRECISION" == "__float128" ]; then
     PETSC_ARCH+=-float128
 else
-  echo "unrecognized precision $PRECISION provided (try python2 ./configure help | grep precision to see available options)"
+  printf "unrecognized precision $PRECISION provided (try python2 ./configure help | grep precision to see available options)\n"
   exit 1
 fi
 
@@ -78,7 +78,7 @@ if [ "$SCALARTYPE" == "real" ]; then
 elif [ "$SCALARTYPE" == "complex" ]; then
     PETSC_ARCH+=-complex
 else
-  echo "unrecognized scalar type $SCALARTYPE provided "
+  printf "unrecognized scalar type $SCALARTYPE provided\n"
   exit 1
 fi
 
@@ -104,8 +104,8 @@ DOWNLOAD_MPICH=${DOWNLOAD_MPICH:-1}
 
 #########################################################################################
 
-echo PETSC_DIR=$PETSC_DIR
-echo PETSC_ARCH=$PETSC_ARCH
+printf "PETSC_DIR=$PETSC_DIR\n"
+printf "PETSC_ARCH=$PETSC_ARCH\n"
 
 # Use PRECISION to choose an appropriate BLAS/LAPACK
 if [ "DOWNLOAD_BLASLAPACK" == "1" ]; then
@@ -146,16 +146,22 @@ else
 fi
 
 if [ "$EXTRA" == "1" ]; then
-  EXTRA_OPTS=" --download-yaml --download-hdf5 --download-scalapack --download-metis --download-parmetis --download-mumps --download-superlu_dist --download-triangle --download-ctetgen"
+  EXTRA_OPTS=" --download-yaml"
+  EXTRA_OPTS+=" --download-scalapack --download-metis --download-parmetis --download-mumps"
+  EXTRA_OPTS+=" --download-superlu_dist"
+  EXTRA_OPTS+=" --download-ptscotch --download-pastix"
   if [ "$PRECISION" == "double" ]; then
     EXTRA_OPTS+=" --download-sundials "
+  fi
+  if [ "$ARCHNAME" != "darwin" ]; then
+    EXTRA_OPTS+=" --download-hdf5" # seg faults on OS X
   fi
 fi
 
 if [ "$DEBUG" == "0" ]; then
-    OPTFLAGS="--COPTFLAGS=\"-g -O3 -march=native -mtune=native \" --CXXOPTFLAGS=\"-g -O3 -march=native -mtune=native \" --FOPTFLAGS=\"-g -O3 -march=native -mtune=native \""
+    OPTFLAGS_OPTS="--COPTFLAGS=\"-g -O3 -march=native -mtune=native \" --CXXOPTFLAGS=\"-g -O3 -march=native -mtune=native \" --FOPTFLAGS=\"-g -O3 -march=native -mtune=native \""
 else
-    OPTFLAGS=
+    OPTFLAGS_OPTS=
 fi
 
 if [ "$DOWNLOAD_MPICH" == "1" ]; then
@@ -164,7 +170,6 @@ else
   MPI_OPTS=""
 fi
 
-# The spaces at the ends of the lines are important.
 OPTS=" \
 PETSC_DIR=$PETSC_DIR \
 PETSC_ARCH=$PETSC_ARCH \
@@ -176,14 +181,14 @@ PETSC_ARCH=$PETSC_ARCH \
 --with-fc=$MYFC \
 $MPI_OPTS \
 $BLAS_LAPACK_OPTS \
-$OPTFLAGS \
+$OPTFLAGS_OPTS \
 $VIENNACL_OPTS \
 $C2HTML_OPTS \
 $SUITESPARSE_OPTS \
 $EXTRA_OPTS \
 $CUSTOM_OPTS \
 "
-echo "Configuring with options:"
-echo $OPTS
+printf "Configuring with options:\n"
+printf "$OPTS\n"
 
 python2 ./configure $OPTS
