@@ -7,28 +7,32 @@
 
 import os
 import sys
+import traceback
 srcDir = os.path.split(os.path.abspath(__file__))[0]    # directory of this file
 sys.path.append(os.path.join(srcDir,'pythontestharness','lib'))  # overrides
 try :
     import pyTestHarness.harness as pthharness
     import pyTestHarness.test as pthtest
-except ImportError :
+except Exception as errorMessage :
+  if not sys.exc_info()[-1].tb_next :     # Check that the traceback has depth 1
+    traceback.print_exc()
     print("********************")
-    print("pyTestHarness was not found. Exiting.")
-    print("If you already have this somewhere on your system, add pythontestharness/lib to your PYTHONPATH.")
-    print("Otherwise, you may clone as follows:")
+    print("The required python library pyTestHarness was not found. Exiting.")
+    print("If pyTestHarness is installed on your system, ensure pythontestharness/lib is included in the environment variable PYTHONPATH.")
+    print("If pyTestHarness is not installed, obtain the source by executing the following:")
     print("  git clone https://bitbucket.org/dmay/pythontestharness " + os.path.join(srcDir,'pythontestharness'))
     print("********************")
     sys.exit(1)
+  raise
 
 PETSC_DIR = os.environ.get('PETSC_DIR')
 PETSC_ARCH = os.environ.get('PETSC_ARCH')
-PETSC_SRC_DIR = os.environ.get('PETSC_SRC_DIR') # to get executables from
+PETSC_SRC_DIR = os.environ.get('PETSC_SRC_DIR') # to get example source from
 if not PETSC_DIR or not (PETSC_ARCH or PETSC_SRC_DIR) :
-  raise Exception('You must define PETSC_DIR and one of PETSC_ARCH or PETSC_SRC_DIR (to get example with prefix build)')
-SNESExDir = os.path.join(PETSC_SRC_DIR,'src','snes','examples','tutorials')
+  raise Exception('You must define PETSC_DIR and one of PETSC_ARCH or PETSC_SRC_DIR (to get example source with prefix build)')
 if not PETSC_SRC_DIR :
   PETSC_SRC_DIR = PETSC_DIR
+SNESExDir = os.path.join(PETSC_SRC_DIR,'src','snes','examples','tutorials')
 
 #------------------------------------------------------------------------------#
 def main():

@@ -148,10 +148,11 @@ fi
 if [ "$EXTRA" == "1" ]; then
   EXTRA_OPTS=" --download-yaml"
   EXTRA_OPTS+=" --download-scalapack --download-metis --download-parmetis --download-mumps"
-  EXTRA_OPTS+=" --download-superlu_dist"
   EXTRA_OPTS+=" --download-ptscotch --download-pastix"
   if [ "$PRECISION" == "double" ]; then
     EXTRA_OPTS+=" --download-sundials "
+    EXTRA_OPTS+=" --download-superlu_dist "
+    EXTRA_OPTS+=" --download-hypre "
   fi
   if [ "$ARCHNAME" != "darwin" ]; then
     EXTRA_OPTS+=" --download-hdf5" # seg faults on OS X
@@ -159,7 +160,7 @@ if [ "$EXTRA" == "1" ]; then
 fi
 
 if [ "$DEBUG" == "0" ]; then
-    OPTFLAGS_OPTS="--COPTFLAGS=\"-g -O3 -march=native -mtune=native \" --CXXOPTFLAGS=\"-g -O3 -march=native -mtune=native \" --FOPTFLAGS=\"-g -O3 -march=native -mtune=native \""
+    OPTFLAGS_OPTS="--COPTFLAGS=\"-g -O3 -march=native \" --CXXOPTFLAGS=\"-g -O3 -march=native \" --FOPTFLAGS=\"-g -O3 -march=native \""
 else
     OPTFLAGS_OPTS=
 fi
