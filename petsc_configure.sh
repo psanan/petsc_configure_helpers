@@ -111,12 +111,18 @@ fi
 OPTS="\
 PETSC_DIR=$PETSC_DIR \
 PETSC_ARCH=$PETSC_ARCH \
---with-precision=$PRECISION \
---with-scalar-type=$SCALARTYPE \
 --with-cc=$MYCC \
 --with-cxx=$MYCXX \
 --with-fc=$MYFC \
 "
+
+if [ "$PRECISION" != "double" ]; then
+  OPTS+=" --with-precision=$PRECISION"
+fi
+
+if [ "$SCALARTYPE" != "real" ]; then
+  OPTS+=" --with-scalartype=$SCALARTYPE"
+fi
 
 # Use PRECISION to choose an appropriate BLAS/LAPACK
 if [ "DOWNLOAD_BLASLAPACK" == "1" ]; then
@@ -146,7 +152,7 @@ if [ "$USE_SUITESPARSE" == "1" ] && [ "$PRECISION" == "double" ]; then
 fi
 
 if [ "$EXTRA" == "1" ]; then
-  OPTS=" --download-yaml"
+  OPTS+=" --download-yaml"
   OPTS+=" --download-scalapack --download-metis --download-parmetis --download-mumps"
   OPTS+=" --download-ptscotch --download-pastix"
   if [ "$PRECISION" == "double" ]; then
