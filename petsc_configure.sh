@@ -12,7 +12,7 @@
 #     EXTRA=1 ARCHMOD=maint /path/to/here/petsc_configure_common.sh             #
 #                                                                               #
 # You can also provide things like PRECISION, SCALARTYPE, etc.                  #
-# You can directly pass any other flags you'd like with CUSTOMS_OPTS            #
+# You can directly pass any other flags you'd like with CUSTOM_OPTS             #
 # Supply PREFIX=1 to set a standard prefix location                             #
 #                                                                               #
 #################################################################################
@@ -64,47 +64,49 @@ DOWNLOAD_MPICH=${DOWNLOAD_MPICH:-1}
 
 # Construct PETSC_ARCH ##################################################################
 
+# Because of a potential PETSc configure bug, we construct everything but the prepended "arch-"
+# in ARCHTAIL
+ARCHTAIL=""
+
 # Set the directory to the current directory
 PETSC_DIR=$PWD
-
-# Construct our PETSC_ARCH as a root plus some modifiers
-PETSC_ARCH_ROOT=arch
-PETSC_ARCH=$PETSC_ARCH_ROOT
 
 # Your name for the architecture (say darwin or ubuntu)
 # Note: set PDS_PETSC_ARCHNAME in your login file
 # Note: the value "darwin" triggers OS X specific settings
 ARCHNAME=${ARCHNAME:-$PDS_PETSC_ARCHNAME}
-PETSC_ARCH+=-$ARCHNAME
+ARCHTAIL+=-$ARCHNAME
 if [ "$ARCHMOD" != "" ]; then
-  PETSC_ARCH+=-$ARCHMOD
+  ARCHTAIL+=-$ARCHMOD
 fi
 
 if [ "$PRECISION" == "double" ]; then
-    PETSC_ARCH+=-double
+    ARCHTAIL+=-double
 elif [ "$PRECISION" == "single" ]; then
-    PETSC_ARCH+=-single
+    ARCHTAIL+=-single
 elif [ "$PRECISION" == "__float128" ]; then
-    PETSC_ARCH+=-float128
+    ARCHTAIL+=-float128
 fi
 
 if [ "$EXTRA" == "1" ]; then
-  PETSC_ARCH+=-extra
+  ARCHTAIL+=-extra
 fi
 
 if [ "$SCALARTYPE" == "complex" ]; then
-  PETSC_ARCH+=-complex
+  ARCHTAIL+=-complex
 fi
 
 if [ "$DEBUG" == "1" ]; then
-  PETSC_ARCH+=-debug
+  ARCHTAIL+=-debug
 else
-  PETSC_ARCH+=-opt
+  ARCHTAIL+=-opt
 fi
 
 if [ "$PREFIX" == "1" ]; then
-  PETSC_ARCH+=-prefix
+  ARCHTAIL+=-prefix
 fi
+
+PETSC_ARCH=arch$ARCHTAIL
 
 # Construct configure options ###########################################################
 
@@ -174,8 +176,10 @@ if [ "$DOWNLOAD_MPICH" == "1" ]; then
 fi
 
 if [ "$PREFIX" == "1" ]; then
-  OPTS+=" --prefix=$PETSC_DIR/$PETSC_ARCH-install"
+  OPTS+=" --prefix=$PETSC_DIR/install$ARCHTAIL" # This weird thing is because including PETSC_ARCH caused issues
 fi
+
+OPTS+=" $CUSTOM_OPTS "
 
 # Print and Configure ###########################################################
 printf "PETSC_DIR=$PETSC_DIR\n"
