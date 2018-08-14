@@ -154,7 +154,7 @@ fi
 if [ "$EXTRA" == "1" ]; then
   OPTS+=" --download-yaml"
   OPTS+=" --download-scalapack --download-metis --download-parmetis --download-mumps"
-  OPTS+=" --download-ptscotch --download-pastix"
+  #OPTS+=" --download-ptscotch --download-pastix"
   if [ "$PRECISION" == "double" ]; then
     OPTS+=" --download-sundials "
     OPTS+=" --download-superlu_dist "
