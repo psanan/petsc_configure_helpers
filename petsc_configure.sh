@@ -51,6 +51,9 @@ DEBUG=${DEBUG:-1}
 # Set scalar type (real or complex)
 SCALARTYPE=${SCALARTYPE:-real}
 
+# Language type (only useful for testing)
+CLANGUAGE=${CLANGUAGE:-C}
+
 # Compilers
 MYCC=${MYCC:-gcc}
 MYCXX=${MYCXX:-g++}
@@ -88,12 +91,16 @@ elif [ "$PRECISION" == "__float128" ]; then
     ARCHTAIL+=-float128
 fi
 
-if [ "$EXTRA" == "1" ]; then
-  ARCHTAIL+=-extra
-fi
-
 if [ "$SCALARTYPE" == "complex" ]; then
   ARCHTAIL+=-complex
+fi
+
+if [ "$CLANGUAGE" == "C++" ] || [ "$CLANGUAGE" == "c++" ]; then
+  ARCHTAIL+=-cpp
+fi
+
+if [ "$EXTRA" == "1" ]; then
+  ARCHTAIL+=-extra
 fi
 
 if [ "$DEBUG" == "1" ]; then
@@ -123,7 +130,7 @@ if [ "$PRECISION" != "double" ]; then
 fi
 
 if [ "$SCALARTYPE" != "real" ]; then
-  OPTS+=" --with-scalartype=$SCALARTYPE"
+  OPTS+=" --with-scalar-type=$SCALARTYPE"
 fi
 
 # Use PRECISION to choose an appropriate BLAS/LAPACK
@@ -136,7 +143,7 @@ if [ "DOWNLOAD_BLASLAPACK" == "1" ]; then
 fi
 
 # Note that this is a bit non-intuitive using viennacl-dev, as we specify an empty lib location
-if [ "$USE_VIENNACL" == "1" ] && [ "$SCALARTYPE" != "complex" ] ; then
+if [ "$USE_VIENNACL" == "1" ] && [ "$SCALARTYPE" != "complex" ]; then
   OPTS+=" --with-opencl"
   if [ "$VIENNACL_DEV" == "1" ]]; then
     OPTS+=" --with-viennacl=1 --with-viennacl-include=../viennacl-dev --with-viennacl-lib= "
@@ -177,6 +184,10 @@ fi
 
 if [ "$PREFIX" == "1" ]; then
   OPTS+=" --prefix=$PETSC_DIR/install$ARCHTAIL" # This weird thing is because including PETSC_ARCH caused issues
+fi
+
+if [ "$CLANGUAGE" == "C++" ] || [ "$CLANGUAGE" == "c++" ]; then
+  OPTS+=" --with-clanguage=c++"
 fi
 
 OPTS+=" $CUSTOM_OPTS "
