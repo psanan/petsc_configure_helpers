@@ -198,4 +198,6 @@ printf "PETSC_ARCH=$PETSC_ARCH\n"
 printf "Configuring with options:\n"
 printf "$OPTS\n\n"
 
-python2 ./configure $OPTS
+#python2 ./configure $OPTS
+printf "Copy and run this\n"
+echo python2 ./configure $OPTS
