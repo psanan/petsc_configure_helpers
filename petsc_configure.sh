@@ -156,7 +156,7 @@ if [ "$ARCHNAME" == "darwin" ]; then
   OPTS+=" --download-c2html --download-sowing"
 fi
 
-if [ "$USE_SUITESPARSE" == "1" ] && [ "$PRECISION" == "double" ]; then
+if [ "$USE_SUITESPARSE" == "1" ] && [ "$PRECISION" == "double" ] && [ "$SCALARTYPE" == "real" ]; then
   OPTS+=" --download-suitesparse"
 fi
 
