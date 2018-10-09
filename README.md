@@ -4,10 +4,11 @@ Convenience scripts to help with PETSc configuration.
 ### Local ###
 See `petsc_configure.py`. Example usage (untested):
 
+    git clone https://bitbucket.org/psanan/petsc_configure_helpers
     git clone https://bitbucket.org/petsc/petsc -b maint petsc-maint
     cd petsc-maint
-    export PDS_PETSC_ARCHNAME=ubuntu                   # can put in login file
-    ./petsc_configure.py --archmod=maint --extra=2 --with-debugging=0
+    export PDS_PETSC_ARCHNAME=ubuntu # can put in login file
+    ../petsc_configure_helpers/petsc_configure.py --archmod=maint --extra=2 --with-debugging=0
 
 ### Clusters ###
 See `arch-xxx.py`. Example usage (untested) :
@@ -23,8 +24,3 @@ See `arch-xxx.py`. Example usage (untested) :
     ~/petsc_configure_helpers/test.py    # wait for jobs to finish
     ~/petsc_configure_helpers/test.py -v
     ~/petsc_configure_helpers/test.py -p
-
-### KNL
-For future use, Satish mentioned something like this on the PETSc mailing list (and see `arch-linux-knl.py` in latest PETSc)
-
-    COPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512" CXXOPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512" FOPTFLAGS="-g -O3 -fp-model fast -xMIC-AVX512
