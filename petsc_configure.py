@@ -97,9 +97,9 @@ def process_args(configure_options_in,args) :
     download_f2blaslapack=get_option_value(configure_options,"--download-f2cblaslapack")
     if download_fblaslapack != False and download_f2blaslapack != False :
         if precision == '__float128' :
-            configure_options.append('--download_f2blaslapack')
+            configure_options.append('--download-f2blaslapack')
         else :
-            configure_options.append('--download_fblaslapack')
+            configure_options.append('--download-fblaslapack')
 
     # MPI
     with_mpi=get_option_value(configure_options,"--with-mpi")
@@ -150,7 +150,7 @@ def get_option_value(configure_options,key) :
         value = None
     if value == '0' or value == 'false' or value == 'no' :
         value = False
-    if value == '1' or value == 'true' or value == 'yes' :
+    if value == '1' or value == 'true' or value == 'yes' or value == '' :
         value = True
     return value
 
