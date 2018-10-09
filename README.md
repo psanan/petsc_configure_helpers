@@ -2,12 +2,12 @@
 Convenience scripts to help with PETSc configuration.
 
 ### Local ###
-See `petsc_configure.sh`. Example usage (untested):
+See `petsc_configure.py`. Example usage (untested):
 
     git clone https://bitbucket.org/petsc/petsc -b maint petsc-maint
     cd petsc-maint
     export PDS_PETSC_ARCHNAME=ubuntu                   # can put in login file
-    ARCHMOD=maint DEBUG=0 EXTRA=1 ~/petsc_configure_helpers/petsc_configure.sh
+    ./petsc_configure.py --archmod=maint --extra=2 --with-debugging=0
 
 ### Clusters ###
 See `arch-xxx.py`. Example usage (untested) :
