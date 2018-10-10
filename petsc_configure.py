@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #################################################################################
 #                       Configuration helper for PETSc                          #
 #################################################################################
@@ -63,13 +63,18 @@ def process_args(configure_options_in,args) :
     # Initialize options and arch identifiers
     arch_identifiers = initialize_arch_identifiers(args)
 
-    # Precision
+    # Floating point precision
     precision=get_option_value(configure_options,"--with-precision")
     if precision :
         if precision == '__float128' :
             arch_identifiers.append('quad')
         else :
             arch_identifiers.append(precision)
+
+    # Integer precision
+    int64 = get_option_value(configure_options,"--with-64-bit-indices")
+    if int64 :
+        arch_identifiers.append("int64")
 
     # Scalar type
     scalartype=get_option_value(configure_options,"--with-scalartype")
@@ -81,16 +86,6 @@ def process_args(configure_options_in,args) :
     if clanguage :
         if clanguage == 'cxx' or clanguage == 'Cxx' or clanguage == 'c++' or clanguage == 'C++':
             arch_identifiers.append('cxx')
-
-    # Debugging
-    debugging=get_option_value(configure_options,"--with-debugging")
-    if debugging == False :
-        configure_options.append("--COPTFLAGS=\"-g -O3 -march=native\"")
-        configure_options.append("--CXXOPTFLAGS=\"-g -O3 -march=native\"")
-        configure_options.append("--FOPTFLAGS=\"-g -O3 -march=native\"")
-        arch_identifiers.append('opt')
-    else :
-        arch_identifiers.append('debug')
 
     # BLAS/LAPACK
     download_fblaslapack=get_option_value(configure_options,"--download-fblaslapack")
@@ -126,6 +121,17 @@ def process_args(configure_options_in,args) :
         if args.extra >=2 :
             arch_identifiers.append('extra')
 
+    # Debugging
+    debugging=get_option_value(configure_options,"--with-debugging")
+    if debugging == False :
+        configure_options.append("--COPTFLAGS=\"-g -O3 -march=native\"")
+        configure_options.append("--CXXOPTFLAGS=\"-g -O3 -march=native\"")
+        configure_options.append("--FOPTFLAGS=\"-g -O3 -march=native\"")
+        arch_identifiers.append('opt')
+    else :
+        arch_identifiers.append('debug')
+
+
     # Use the current directory as PETSC_DIR
     configure_options.append('PETSC_DIR='+os.getcwd())
 
@@ -142,16 +148,22 @@ def get_option_value(configure_options,key) :
         raise RuntimeError('More than one match for option',key)
     elif len(matches) != 0 :
         match = matches[0]
-        spl = match.split("=")
-        if len(spl) < 2 :
-            raise RuntimeError('match'+match+'does not seem to have correct --foo=bar format')
-        value = spl[1]
-    else :
+        if match == key : # interpret exact key as True
+            value = True
+        else :
+            spl = match.split("=")
+            print('splln'+str(len(spl)))
+            if len(spl) < 2 :
+                raise RuntimeError('match'+match+'does not seem to have correct --foo=bar format')
+            value = spl[1]
+    else : # no match
         value = None
     if value == '0' or value == 'false' or value == 'no' :
         value = False
-    if value == '1' or value == 'true' or value == 'yes' or value == '' :
+    elif value == '1' or value == 'true' or value == 'yes' :
         value = True
+    elif value == '' :
+        raise RuntimeError("Don't know how to process "+match)
     return value
 
 def initialize_arch_identifiers(args) :
