@@ -2,23 +2,22 @@
 #################################################################################
 #                       Configuration helper for PETSc                          #
 #################################################################################
-#
-# Execute from PETSC_DIR
-#
-# Run with -h to see arguments
-#
-# Adds a thin extra layer around PETSc's configuration script,
-# to help combine commonly-used combinations of configuration options and
-# construct meaningful PETSC_ARCH values.
-#
-# Proceeds by collecting the set of passed arguments and processing them
-# before sending them to PETSc's configure script.
-# This logic will likely be somewhat brittle. Always do a sanity check
-# and look at the options that are actually being sent. This script should
-# be simple enough to figure out what's going on.
-#
-# by Patrick Sanan, 2018
-#
+#                                                                               #
+# Execute from PETSC_DIR with Python 2 (used by older versions of PETSc)        #
+#                                                                               #
+# Run with -h to see arguments                                                  #
+#                                                                               #
+# Adds a thin extra layer around PETSc's configuration script,                  #
+# to help combine commonly-used combinations of configuration options and       #
+# construct meaningful PETSC_ARCH values.                                       #
+#                                                                               #
+# Proceeds by collecting the set of passed arguments and processing them        #
+# before sending them to PETSc's configure script.                              #
+# This logic will likely be somewhat brittle. Always do a sanity check          #
+# and look at the options that are actually being sent. This script should      #
+# be simple enough to figure out what's going on.                               #
+#                                                                               #
+# Patrick Sanan, 2018                                                           #
 #################################################################################
 
 from __future__ import print_function
@@ -28,6 +27,7 @@ import argparse
 import re
 
 def main() :
+    """ Main script logic """
     args,configure_options_in = get_args()
     configure_options = process_args(configure_options_in,args)
     petsc_configure(configure_options,args)
@@ -43,6 +43,7 @@ def get_args() :
     return args,unknown
 
 def get_arch_name() :
+    """ Get a name to identify the type of machine, e.g. ubuntu or darwin """
     PDS_PETSC_ARCHNAME=os.getenv('PDS_PETSC_ARCHNAME')
     if PDS_PETSC_ARCHNAME :
         return PDS_PETSC_ARCHNAME
@@ -53,15 +54,13 @@ def process_args(configure_options_in,args) :
     """ Main logic to create a set of options for PETSc's configure script,
     along with a corresponding PETSC_ARCH string """
 
-    # NOTE: the order here is important, as
+    # NOTE: the order here is significant, as
     # 1. PETSC_ARCH names are constructed in order
     # 2. Processing of options depends on the processing of previous ones
 
-    # Initialize configure_options
-    configure_options = configure_options_in[:] #copy
-
     # Initialize options and arch identifiers
-    arch_identifiers = initialize_arch_identifiers(args)
+    configure_options = configure_options_in[:] #copy
+    arch_identifiers  = initialize_arch_identifiers(args)
 
     # Floating point precision
     precision=get_option_value(configure_options,"--with-precision")
@@ -131,7 +130,6 @@ def process_args(configure_options_in,args) :
     else :
         arch_identifiers.append('debug')
 
-
     # Use the current directory as PETSC_DIR
     configure_options.append('PETSC_DIR='+os.getcwd())
 
@@ -141,7 +139,7 @@ def process_args(configure_options_in,args) :
     return configure_options
 
 def get_option_value(configure_options,key) :
-    """ Get the value of a configure option expected to have a value """
+    """ Get the value of a configure option """
     r = re.compile(key+".*")
     matches = list(filter(r.match, configure_options))
     if len(matches) > 1 :
