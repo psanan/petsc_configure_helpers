@@ -156,7 +156,7 @@ if [ "$ARCHNAME" == "darwin" ]; then
   OPTS+=" --download-c2html --download-sowing"
 fi
 
-if [ "$USE_SUITESPARSE" == "1" ] && [ "$PRECISION" == "double" ]; then
+if [ "$USE_SUITESPARSE" == "1" ] && [ "$PRECISION" == "double" ] && [ "$SCALARTYPE" == "real" ]; then
   OPTS+=" --download-suitesparse"
 fi
 
@@ -192,10 +192,8 @@ fi
 
 OPTS+=" $CUSTOM_OPTS "
 
-# Print and Configure ###########################################################
+# Print Configure line to copy ##################################################
 printf "PETSC_DIR=$PETSC_DIR\n"
 printf "PETSC_ARCH=$PETSC_ARCH\n"
-printf "Configuring with options:\n"
-printf "$OPTS\n\n"
-
-python2 ./configure $OPTS
+printf "Copy and run this\n"
+echo python2 ./configure $OPTS
