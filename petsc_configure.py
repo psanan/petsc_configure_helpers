@@ -150,7 +150,6 @@ def get_option_value(configure_options,key) :
             value = True
         else :
             spl = match.split("=")
-            print('splln'+str(len(spl)))
             if len(spl) < 2 :
                 raise RuntimeError('match'+match+'does not seem to have correct --foo=bar format')
             value = spl[1]
