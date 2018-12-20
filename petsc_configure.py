@@ -109,23 +109,25 @@ def process_args(configure_options_in,args) :
         if args.extra >= 2:
             configure_options.append('--download-scalapack')
             configure_options.append('--download-metis')
+            configure_options.append('--download-cmake')     # for METIS
             configure_options.append('--download-parmetis')
             configure_options.append("--download-mumps")
-            if precision != 'single' and precision != 'double' :
+        if args.extra >= 3:
+            configure_options.append("--download-hdf5")
+        if args.extra >= 4:
+            if precision == 'double' :
                 configure_options.append("--download-sundials")
                 configure_options.append("--download-superlu_dist")
                 configure_options.append("--download-hypre")
-        if args.extra >= 3:
-            configure_options.append("--download-hdf5")
         if args.extra >=2 :
             arch_identifiers.append('extra')
 
     # Debugging
     debugging=get_option_value(configure_options,"--with-debugging")
     if debugging == False :
-        configure_options.append("--COPTFLAGS=\"-g -O3 -march=native\"")
-        configure_options.append("--CXXOPTFLAGS=\"-g -O3 -march=native\"")
-        configure_options.append("--FOPTFLAGS=\"-g -O3 -march=native\"")
+        configure_options.append("--COPTFLAGS=-g -O3")
+        configure_options.append("--CXXOPTFLAGS=-g -O3")
+        configure_options.append("--FOPTFLAGS=-g -O3")
         arch_identifiers.append('opt')
     else :
         arch_identifiers.append('debug')
