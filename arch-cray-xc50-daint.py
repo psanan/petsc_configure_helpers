@@ -3,6 +3,7 @@
 #  module load PrgEnv-cray
 
 configure_options = [
+  '--with-batch=1',
   '--with-cc=cc',
   '--with-cxx=CC',
   '--with-fc=ftn',
@@ -17,6 +18,7 @@ configure_options = [
   '--with-valgrind=0',
   '--known-mpi-shared-libraries=1',
   '--with-x=0',
+  '--known-64-bit-blas-indices=0',
   '--download-suitesparse',
   'PETSC_ARCH=arch-cray-xc50-daint'
   ]
