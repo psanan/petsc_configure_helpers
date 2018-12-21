@@ -37,18 +37,12 @@ def get_args() :
     parser = argparse.ArgumentParser(description='Compute arguments to pass to PETSc\'s configure script')
     parser.add_argument('--dryrun',action="store_true",help="don't actually configure")
     parser.add_argument('--extra',type=int,default=1,help="common extra packages (integer value, see script for now) ")
-    parser.add_argument('--archname',default=get_arch_name(),help="arch name, picked up from PDS_PETSC_ARCHNAME")
     parser.add_argument('--archmod',default=None,help="additional terms in arch name, usually from a branch e.g \"maint\"")
     args,unknown = parser.parse_known_args()
     return args,unknown
 
-def get_arch_name() :
-    """ Get a name to identify the type of machine, e.g. ubuntu or darwin """
-    PDS_PETSC_ARCHNAME=os.getenv('PDS_PETSC_ARCHNAME')
-    if PDS_PETSC_ARCHNAME :
-        return PDS_PETSC_ARCHNAME
-    else :
-        return None
+def detect_darwin() :
+    return sys.platform == 'darwin'
 
 def process_args(configure_options_in,args) :
     """ Main logic to create a set of options for PETSc's configure script,
@@ -58,9 +52,18 @@ def process_args(configure_options_in,args) :
     # 1. PETSC_ARCH names are constructed in order
     # 2. Processing of options depends on the processing of previous ones
 
+    # OS X is ornery, so we base many decisions on whether "darwin" is used
+    isdarwin = detect_darwin()
+
     # Initialize options and arch identifiers
     configure_options = configure_options_in[:] #copy
     arch_identifiers  = initialize_arch_identifiers(args)
+
+    # Compilers
+    if not get_option_value(configure_options,"--with-cc") and isdarwin :
+        configure_options.append('--with-cc=/usr/bin/gcc')
+    if not get_option_value(configure_options,"--with-cxx") and isdarwin :
+        configure_options.append('--with-cxx=/usr/bin/g++')
 
     # Floating point precision
     precision=get_option_value(configure_options,"--with-precision")
@@ -71,12 +74,11 @@ def process_args(configure_options_in,args) :
             arch_identifiers.append(precision)
 
     # Integer precision
-    int64 = get_option_value(configure_options,"--with-64-bit-indices")
-    if int64 :
+    if get_option_value(configure_options,"--with-64-bit-indices") :
         arch_identifiers.append("int64")
 
     # Scalar type
-    scalartype=get_option_value(configure_options,"--with-scalartype")
+    scalartype = get_option_value(configure_options,"--with-scalartype")
     if scalartype :
         arch_identifiers.append(scalartype)
 
@@ -91,9 +93,10 @@ def process_args(configure_options_in,args) :
     download_f2blaslapack=get_option_value(configure_options,"--download-f2cblaslapack")
     if download_fblaslapack != False and download_f2blaslapack != False :
         if precision == '__float128' :
-            configure_options.append('--download-f2blaslapack')
+            configure_options.append('--download-f2cblaslapack')
         else :
-            configure_options.append('--download-fblaslapack')
+            if not isdarwin :
+                configure_options.append('--download-fblaslapack')
 
     # MPI
     with_mpi=get_option_value(configure_options,"--with-mpi")
@@ -125,9 +128,12 @@ def process_args(configure_options_in,args) :
     # Debugging
     debugging=get_option_value(configure_options,"--with-debugging")
     if debugging == False :
-        configure_options.append("--COPTFLAGS=-g -O3")
-        configure_options.append("--CXXOPTFLAGS=-g -O3")
-        configure_options.append("--FOPTFLAGS=-g -O3")
+        if not get_option_value(configure_options,"--COPTFLAGS") :
+            configure_options.append("--COPTFLAGS=-g -O3")
+        if not get_option_value(configure_options,"--CXXOPTFLAGS") :
+            configure_options.append("--CXXOPTFLAGS=-g -O3")
+        if not get_option_value(configure_options,"--FOPTFLAGS") :
+            configure_options.append("--FOPTFLAGS=-g -O3")
         arch_identifiers.append('opt')
     else :
         arch_identifiers.append('debug')
@@ -168,8 +174,6 @@ def get_option_value(configure_options,key) :
 def initialize_arch_identifiers(args) :
     """ Create initial arch identifiers """
     arch_identifiers = ['arch']
-    if args.archname :
-        arch_identifiers.append(args.archname)
     if args.archmod :
         arch_identifiers.append(args.archmod)
     return arch_identifiers
