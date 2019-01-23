@@ -17,7 +17,7 @@
 # and look at the options that are actually being sent. This script should      #
 # be simple enough to figure out what's going on.                               #
 #                                                                               #
-# Patrick Sanan, 2018                                                           #
+# Patrick Sanan, 2018-2019                                                      #
 #################################################################################
 
 from __future__ import print_function
@@ -33,7 +33,7 @@ def main() :
     petsc_configure(configure_options,args)
 
 def get_args() :
-    """ Retrieve custom arguments """
+    """ Retrieve custom arguments and remaining arguments"""
     parser = argparse.ArgumentParser(description='Compute arguments to pass to PETSc\'s configure script')
     parser.add_argument('--dryrun',action="store_true",help="don't actually configure")
     parser.add_argument('--extra',type=int,default=1,help="common extra packages (integer value, see script for now) ")
@@ -179,20 +179,20 @@ def initialize_arch_identifiers(args) :
     return arch_identifiers
 
 def petsc_configure(configure_options,args) :
-  """ Standard PETSc configuration script logic (from config/examples) """
-  if (args.dryrun) :
-      print("Dry Run. Would configure with these options:")
-      print("\n".join(configure_options))
-  else :
-      sys.path.insert(0,os.path.abspath('config'))
-      try :
-          import configure
-      except ImportError :
-          print('PETSc configure module not found. Make sure you are executing from PETSC_DIR')
-          sys.exit(1)
-      print('Configuring with these options (make sure they are sane!)')
-      print("\n".join(configure_options))
-      configure.petsc_configure(configure_options)
+    """ Standard PETSc configuration script logic (from config/examples) """
+    if (args.dryrun) :
+        print("Dry Run. Would configure with these options:")
+        print("\n".join(configure_options))
+    else :
+        sys.path.insert(0,os.path.abspath('config'))
+        try :
+            import configure
+        except ImportError :
+            print('PETSc configure module not found. Make sure you are executing from PETSC_DIR')
+            sys.exit(1)
+        print('Configuring with these options (make sure they are sane!)')
+        print("\n".join(configure_options))
+        configure.petsc_configure(configure_options)
 
 if __name__ == '__main__':
     main()
