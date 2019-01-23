@@ -35,11 +35,17 @@ def main() :
 def get_args() :
     """ Retrieve custom arguments and remaining arguments"""
     parser = argparse.ArgumentParser(description='Compute arguments to pass to PETSc\'s configure script')
+    parser.add_argument('--archmod',default=None,help="additional terms in arch name, usually from a branch e.g \"maint\"")
     parser.add_argument('--dryrun',action="store_true",help="don't actually configure")
     parser.add_argument('--extra',type=int,default=1,help="common extra packages (integer value, see script for now) ")
-    parser.add_argument('--archmod',default=None,help="additional terms in arch name, usually from a branch e.g \"maint\"")
+    parser.add_argument('--install-dest',default=default_install_dest(),help="Set install prefix as a subdirectory of the supplied location, named as PETSC_ARCH")
     args,unknown = parser.parse_known_args()
     return args,unknown
+
+def default_install_dest() :
+    """ Produce a default location to install """
+    parent_dir = os.path.split(os.getcwd())[0]
+    return os.path.join(parent_dir,'petsc_install')
 
 def detect_darwin() :
     return sys.platform == 'darwin'
@@ -90,8 +96,8 @@ def process_args(configure_options_in,args) :
 
     # BLAS/LAPACK
     download_fblaslapack=get_option_value(configure_options,"--download-fblaslapack")
-    download_f2blaslapack=get_option_value(configure_options,"--download-f2cblaslapack")
-    if download_fblaslapack != False and download_f2blaslapack != False :
+    download_f2cblaslapack=get_option_value(configure_options,"--download-f2cblaslapack")
+    if not download_fblaslapack and not download_f2cblaslapack :
         if precision == '__float128' :
             configure_options.append('--download-f2cblaslapack')
         else :
@@ -138,11 +144,19 @@ def process_args(configure_options_in,args) :
     else :
         arch_identifiers.append('debug')
 
+    # Construct final PETSC_ARCH value
+    petsc_arch = '-'.join(arch_identifiers)
+
+    # Prefix helper (ignore if --prefix is directly supplied)
+    print('debug',args.install_dest)
+    if not get_option_value(configure_options,"--prefix") and args.install_dest :
+        configure_options.append('--prefix='+os.path.join(args.install_dest,petsc_arch))
+
     # Use the current directory as PETSC_DIR
     configure_options.append('PETSC_DIR='+os.getcwd())
 
-    # Create the final PETSC_ARCH string and add to configure options
-    configure_options.append('PETSC_ARCH='+'-'.join(arch_identifiers))
+    # Add PETSC_ARCH string to configure options
+    configure_options.append('PETSC_ARCH='+petsc_arch)
 
     return configure_options
 
@@ -159,7 +173,7 @@ def get_option_value(configure_options,key) :
         else :
             spl = match.split("=")
             if len(spl) < 2 :
-                raise RuntimeError('match'+match+'does not seem to have correct --foo=bar format')
+                raise RuntimeError('match '+match+' does not seem to have correct --foo=bar format')
             value = spl[1]
     else : # no match
         value = None
@@ -190,7 +204,7 @@ def petsc_configure(configure_options,args) :
         except ImportError :
             print('PETSc configure module not found. Make sure you are executing from PETSC_DIR')
             sys.exit(1)
-        print('Configuring with these options (make sure they are sane!)')
+        print('Configuring with these options (make sure they are sane!):')
         print("\n".join(configure_options))
         configure.petsc_configure(configure_options)
 
