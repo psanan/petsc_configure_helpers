@@ -38,14 +38,8 @@ def get_args() :
     parser.add_argument('--archmod',default=None,help="additional terms in arch name, usually from a branch e.g \"maint\"")
     parser.add_argument('--dryrun',action="store_true",help="don't actually configure")
     parser.add_argument('--extra',type=int,default=1,help="common extra packages (integer value, see script for now) ")
-    parser.add_argument('--install-dest',default=default_install_dest(),help="Set install prefix as a subdirectory of the supplied location, named as PETSC_ARCH")
     args,unknown = parser.parse_known_args()
     return args,unknown
-
-def default_install_dest() :
-    """ Produce a default location to install """
-    parent_dir = os.path.split(os.getcwd())[0]
-    return os.path.join(parent_dir,'petsc_install')
 
 def detect_darwin() :
     return sys.platform == 'darwin'
@@ -146,11 +140,6 @@ def process_args(configure_options_in,args) :
 
     # Construct final PETSC_ARCH value
     petsc_arch = '-'.join(arch_identifiers)
-
-    # Prefix helper (ignore if --prefix is directly supplied)
-    print('debug',args.install_dest)
-    if not get_option_value(configure_options,"--prefix") and args.install_dest :
-        configure_options.append('--prefix='+os.path.join(args.install_dest,petsc_arch))
 
     # Use the current directory as PETSC_DIR
     configure_options.append('PETSC_DIR='+os.getcwd())
