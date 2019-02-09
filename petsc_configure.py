@@ -138,6 +138,9 @@ def process_args(configure_options_in,args) :
     else :
         arch_identifiers.append('debug')
 
+    # C2HTML (for building docs locally)
+    configure_options.append("--download-c2html")
+
     # Construct final PETSC_ARCH value
     petsc_arch = '-'.join(arch_identifiers)
 
