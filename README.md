@@ -7,7 +7,6 @@ See `petsc_configure.py`. Example usage (untested):
     git clone https://bitbucket.org/psanan/petsc_configure_helpers
     git clone https://bitbucket.org/petsc/petsc -b maint petsc-maint
     cd petsc-maint
-    export PDS_PETSC_ARCHNAME=ubuntu # can put in login file
     ../petsc_configure_helpers/petsc_configure.py --archmod=maint --extra=2 --with-debugging=0
 
 ### Clusters ###
