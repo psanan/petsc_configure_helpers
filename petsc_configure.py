@@ -66,7 +66,7 @@ def process_args(configure_options_in,args) :
         configure_options.append('--with-cxx=/usr/bin/g++')
 
     # Floating point precision
-    precision=get_option_value(configure_options,"--with-precision")
+    precision = get_option_value(configure_options,"--with-precision")
     if precision :
         if precision == '__float128' :
             arch_identifiers.append('quad')
@@ -83,14 +83,14 @@ def process_args(configure_options_in,args) :
         arch_identifiers.append(scalartype)
 
     # C language
-    clanguage=get_option_value(configure_options,"--with-clanguage")
+    clanguage = get_option_value(configure_options,"--with-clanguage")
     if clanguage :
         if clanguage == 'cxx' or clanguage == 'Cxx' or clanguage == 'c++' or clanguage == 'C++':
             arch_identifiers.append('cxx')
 
     # BLAS/LAPACK
-    download_fblaslapack=get_option_value(configure_options,"--download-fblaslapack")
-    download_f2cblaslapack=get_option_value(configure_options,"--download-f2cblaslapack")
+    download_fblaslapack = get_option_value(configure_options,"--download-fblaslapack")
+    download_f2cblaslapack = get_option_value(configure_options,"--download-f2cblaslapack")
     if not download_fblaslapack and not download_f2cblaslapack :
         if precision == '__float128' :
             configure_options.append('--download-f2cblaslapack')
@@ -99,8 +99,8 @@ def process_args(configure_options_in,args) :
                 configure_options.append('--download-fblaslapack')
 
     # MPI
-    with_mpi=get_option_value(configure_options,"--with-mpi")
-    download_mpich=get_option_value(configure_options,"--download-mpich")
+    with_mpi = get_option_value(configure_options,"--with-mpi")
+    download_mpich = get_option_value(configure_options,"--download-mpich")
     if with_mpi != False and download_mpich != False :
         configure_options.append('--download-mpich')
 
@@ -126,7 +126,7 @@ def process_args(configure_options_in,args) :
             arch_identifiers.append('extra')
 
     # Debugging
-    debugging=get_option_value(configure_options,"--with-debugging")
+    debugging = get_option_value(configure_options,"--with-debugging")
     if debugging == False :
         if not get_option_value(configure_options,"--COPTFLAGS") :
             configure_options.append("--COPTFLAGS=-g -O3")
