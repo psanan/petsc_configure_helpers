@@ -119,6 +119,8 @@ def process_args(configure_options_in,args) :
             configure_options.append("--download-hdf5")
         if args.extra >= 4:
             if precision == 'double' :
+                configure_options.append("--download-ptscotch")  # for pastix, superlu_dist
+                configure_options.append("--download-pastix")
                 configure_options.append("--download-sundials")
                 configure_options.append("--download-superlu_dist")
                 configure_options.append("--download-hypre")
