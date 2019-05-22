@@ -67,24 +67,24 @@ def process_args(configure_options_in,args) :
 
     # Floating point precision
     precision = get_option_value(configure_options,"--with-precision")
-    if precision :
+    if precision and precision != 'double':
         if precision == '__float128' :
             arch_identifiers.append('quad')
         else :
             arch_identifiers.append(precision)
 
     # Integer precision
-    if get_option_value(configure_options,"--with-64-bit-indices") :
+    if get_option_value(configure_options,"--with-64-bit-indices"):
         arch_identifiers.append("int64")
 
     # Scalar type
     scalartype = get_option_value(configure_options,"--with-scalartype")
-    if scalartype :
+    if scalartype and scalartype != 'real':
         arch_identifiers.append(scalartype)
 
     # C language
     clanguage = get_option_value(configure_options,"--with-clanguage")
-    if clanguage :
+    if clanguage and clanguage != 'c' and clanguage != 'C':
         if clanguage == 'cxx' or clanguage == 'Cxx' or clanguage == 'c++' or clanguage == 'C++':
             arch_identifiers.append('cxx')
 
