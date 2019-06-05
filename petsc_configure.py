@@ -38,6 +38,7 @@ def get_args() :
     parser.add_argument('--archmod',default=None,help="additional terms in arch name, usually from a branch e.g \"maint\"")
     parser.add_argument('--dryrun',action="store_true",help="don't actually configure")
     parser.add_argument('--extra',type=int,default=1,help="common extra packages (integer value, see script for now) ")
+    parser.add_argument('--prefix-auto',action="store_true",help="set --prefix to a standard location (in this directory)")
     args,unknown = parser.parse_known_args()
     return args,unknown
 
@@ -46,7 +47,7 @@ def detect_darwin() :
 
 def process_args(configure_options_in,args) :
     """ Main logic to create a set of options for PETSc's configure script,
-    along with a corresponding PETSC_ARCH string """
+    along with a corresponding PETSC_ARCH string, if required """
 
     # NOTE: the order here is significant, as
     # 1. PETSC_ARCH names are constructed in order
@@ -143,14 +144,19 @@ def process_args(configure_options_in,args) :
     # C2HTML (for building docs locally)
     configure_options.append("--download-c2html")
 
-    # Construct final PETSC_ARCH value
-    petsc_arch = '-'.join(arch_identifiers)
+    # Auto-prefix
+    prefix = get_option_value(configure_options,"--prefix")
+    if args.prefix_auto and prefix :
+        raise RuntimeError('Cannot use both --prefix and --prefix-auto')
+    if args.prefix_auto:
+        # Define an install directory inside the PETSC_DIR (danger for older versions of PETSc?)
+        configure_options.append('--prefix='+os.path.join(os.getcwd(),'-'.join(arch_identifiers)+'-install'))
+
+    # Add PETSC_ARCH
+    configure_options.append('PETSC_ARCH='+'-'.join(arch_identifiers))
 
     # Use the current directory as PETSC_DIR
     configure_options.append('PETSC_DIR='+os.getcwd())
-
-    # Add PETSC_ARCH string to configure options
-    configure_options.append('PETSC_ARCH='+petsc_arch)
 
     return configure_options
 
