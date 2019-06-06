@@ -68,6 +68,8 @@ def process_args(configure_options_in,args) :
 
     # Floating point precision
     precision = get_option_value(configure_options,"--with-precision")
+    if not precision :
+        precision = 'double'
     if precision and precision != 'double':
         if precision == '__float128' :
             arch_identifiers.append('quad')
@@ -80,11 +82,15 @@ def process_args(configure_options_in,args) :
 
     # Scalar type
     scalartype = get_option_value(configure_options,"--with-scalartype")
+    if not scalartype :
+        scalartype == 'real'
     if scalartype and scalartype != 'real':
         arch_identifiers.append(scalartype)
 
     # C language
     clanguage = get_option_value(configure_options,"--with-clanguage")
+    if not clanguage :
+        clanguage = 'c'
     if clanguage and clanguage != 'c' and clanguage != 'C':
         if clanguage == 'cxx' or clanguage == 'Cxx' or clanguage == 'c++' or clanguage == 'C++':
             arch_identifiers.append('cxx')
@@ -120,13 +126,13 @@ def process_args(configure_options_in,args) :
             configure_options.append("--download-hdf5")
         if args.extra >= 4:
             if precision == 'double' :
-                configure_options.append("--download-ptscotch")  # for pastix, superlu_dist
-                configure_options.append("--download-pastix")
                 configure_options.append("--download-sundials")
-                configure_options.append("--download-superlu_dist")
                 configure_options.append("--download-hypre")
         if args.extra >=2 :
             arch_identifiers.append('extra')
+
+    # C2HTML (for building docs locally)
+    configure_options.append("--download-c2html")
 
     # Debugging
     debugging = get_option_value(configure_options,"--with-debugging")
@@ -141,15 +147,16 @@ def process_args(configure_options_in,args) :
     else :
         arch_identifiers.append('debug')
 
-    # C2HTML (for building docs locally)
-    configure_options.append("--download-c2html")
+    # Prefix
+    prefix = get_option_value(configure_options,"--prefix")
+    if prefix :
+        arch_identifiers.append('prefix')
 
     # Auto-prefix
-    prefix = get_option_value(configure_options,"--prefix")
-    if args.prefix_auto and prefix :
-        raise RuntimeError('Cannot use both --prefix and --prefix-auto')
-    if args.prefix_auto:
-        # Define an install directory inside the PETSC_DIR (danger for older versions of PETSc?)
+    # Define an install directory inside the PETSC_DIR (danger for older versions of PETSc?)
+    if args.prefix_auto :
+        if prefix :
+            raise RuntimeError('Cannot use both --prefix and --prefix-auto')
         configure_options.append('--prefix='+os.path.join(os.getcwd(),'-'.join(arch_identifiers)+'-install'))
 
     # Add PETSC_ARCH
