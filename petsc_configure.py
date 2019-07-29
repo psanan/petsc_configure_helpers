@@ -112,7 +112,9 @@ def process_args(configure_options_in,args) :
         if args.extra >= 2:
             configure_options.append('--download-scalapack')
             configure_options.append('--download-metis')
-            configure_options.append('--download-cmake')     # for METIS
+            download_cmake = get_option_value(configure_options,"--download-cmake")
+            if download_cmake == None :
+                configure_options.append('--download-cmake')     # for METIS
             configure_options.append('--download-parmetis')
             configure_options.append("--download-mumps")
         if args.extra >= 3:
