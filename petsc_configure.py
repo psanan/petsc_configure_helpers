@@ -20,6 +20,7 @@
 # Patrick Sanan, 2018-2019                                                      #
 #################################################################################
 
+# Idea: dump options in root dir, to safeguard against blowing away $PETSC_ARCH dir.
 from __future__ import print_function
 import sys
 import os

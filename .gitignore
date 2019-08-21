@@ -1,5 +1,14 @@
-pth*.conf
-*.swp
-*.DS_Store
-pythontestharness
+# SciATH
+*.conf
+sciath
 *sandbox*
+
+# Python
+*.pyc
+__pycache__
+
+# OS X
+.DS_Store
+
+# Vim
+.*.sw[omp]
