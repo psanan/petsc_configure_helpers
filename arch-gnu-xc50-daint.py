@@ -13,6 +13,8 @@ configure_options = [
   'FOPTFLAGS=',
 
   '--download-suitesparse',
+  '--download-mumps',
+  '--download-scalapack',
   '--download-yaml',
 
   '--with-shared-libraries=0',
