@@ -219,7 +219,7 @@ def petsc_configure(configure_options,args) :
         except ImportError :
             print('PETSc configure module not found. Make sure you are executing from PETSC_DIR')
             sys.exit(1)
-        print('Configuring with these options (make sure they are sane!):')
+        print('Configuring with these options:')
         print("\n".join(configure_options))
         configure.petsc_configure(configure_options)
 
