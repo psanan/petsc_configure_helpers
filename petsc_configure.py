@@ -20,6 +20,7 @@
 # Patrick Sanan, 2018-2019                                                      #
 #################################################################################
 
+# Idea: dump options in root dir, to safeguard against blowing away $PETSC_ARCH dir.
 from __future__ import print_function
 import sys
 import os
@@ -38,6 +39,7 @@ def get_args() :
     parser.add_argument('--archmod',default=None,help="additional terms in arch name, usually from a branch e.g \"maint\"")
     parser.add_argument('--dryrun',action="store_true",help="don't actually configure")
     parser.add_argument('--extra',type=int,default=1,help="common extra packages (integer value, see script for now) ")
+    parser.add_argument('--prefix-auto',action="store_true",help="set --prefix to a standard location (in this directory)")
     args,unknown = parser.parse_known_args()
     return args,unknown
 
@@ -46,7 +48,7 @@ def detect_darwin() :
 
 def process_args(configure_options_in,args) :
     """ Main logic to create a set of options for PETSc's configure script,
-    along with a corresponding PETSC_ARCH string """
+    along with a corresponding PETSC_ARCH string, if required """
 
     # NOTE: the order here is significant, as
     # 1. PETSC_ARCH names are constructed in order
@@ -67,24 +69,30 @@ def process_args(configure_options_in,args) :
 
     # Floating point precision
     precision = get_option_value(configure_options,"--with-precision")
-    if precision :
+    if not precision :
+        precision = 'double'
+    if precision and precision != 'double':
         if precision == '__float128' :
             arch_identifiers.append('quad')
         else :
             arch_identifiers.append(precision)
 
     # Integer precision
-    if get_option_value(configure_options,"--with-64-bit-indices") :
+    if get_option_value(configure_options,"--with-64-bit-indices"):
         arch_identifiers.append("int64")
 
     # Scalar type
     scalartype = get_option_value(configure_options,"--with-scalartype")
-    if scalartype :
+    if not scalartype :
+        scalartype == 'real'
+    if scalartype and scalartype != 'real':
         arch_identifiers.append(scalartype)
 
     # C language
     clanguage = get_option_value(configure_options,"--with-clanguage")
-    if clanguage :
+    if not clanguage :
+        clanguage = 'c'
+    if clanguage and clanguage != 'c' and clanguage != 'C':
         if clanguage == 'cxx' or clanguage == 'Cxx' or clanguage == 'c++' or clanguage == 'C++':
             arch_identifiers.append('cxx')
 
@@ -112,20 +120,22 @@ def process_args(configure_options_in,args) :
         if args.extra >= 2:
             configure_options.append('--download-scalapack')
             configure_options.append('--download-metis')
-            configure_options.append('--download-cmake')     # for METIS
+            download_cmake = get_option_value(configure_options,"--download-cmake")
+            if download_cmake == None :
+                configure_options.append('--download-cmake')     # for METIS
             configure_options.append('--download-parmetis')
             configure_options.append("--download-mumps")
         if args.extra >= 3:
             configure_options.append("--download-hdf5")
         if args.extra >= 4:
             if precision == 'double' :
-                configure_options.append("--download-ptscotch")  # for pastix, superlu_dist
-                configure_options.append("--download-pastix")
                 configure_options.append("--download-sundials")
-                configure_options.append("--download-superlu_dist")
                 configure_options.append("--download-hypre")
         if args.extra >=2 :
             arch_identifiers.append('extra')
+
+    # C2HTML (for building docs locally)
+    configure_options.append("--download-c2html")
 
     # Debugging
     debugging = get_option_value(configure_options,"--with-debugging")
@@ -141,16 +151,27 @@ def process_args(configure_options_in,args) :
         arch_identifiers.append('debug')
 
     # C2HTML (for building docs locally)
-    configure_options.append("--download-c2html")
+    with_c2html = get_option_value(configure_options,'--with-c2html')
+    download_c2html = get_option_value(configure_options,'--download-c2html')
+    if not with_c2html != False and download_c2html != False :
+        configure_options.append("--download-c2html")
+    # Prefix
+    prefix = get_option_value(configure_options,"--prefix")
+    if prefix :
+        arch_identifiers.append('prefix')
 
-    # Construct final PETSC_ARCH value
-    petsc_arch = '-'.join(arch_identifiers)
+    # Auto-prefix
+    # Define an install directory inside the PETSC_DIR (danger for older versions of PETSc?)
+    if args.prefix_auto :
+        if prefix :
+            raise RuntimeError('Cannot use both --prefix and --prefix-auto')
+        configure_options.append('--prefix='+os.path.join(os.getcwd(),'-'.join(arch_identifiers)+'-install'))
+
+    # Add PETSC_ARCH
+    configure_options.append('PETSC_ARCH='+'-'.join(arch_identifiers))
 
     # Use the current directory as PETSC_DIR
     configure_options.append('PETSC_DIR='+os.getcwd())
-
-    # Add PETSC_ARCH string to configure options
-    configure_options.append('PETSC_ARCH='+petsc_arch)
 
     return configure_options
 
@@ -198,7 +219,7 @@ def petsc_configure(configure_options,args) :
         except ImportError :
             print('PETSc configure module not found. Make sure you are executing from PETSC_DIR')
             sys.exit(1)
-        print('Configuring with these options (make sure they are sane!):')
+        print('Configuring with these options:')
         print("\n".join(configure_options))
         configure.petsc_configure(configure_options)
 
