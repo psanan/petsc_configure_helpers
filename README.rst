@@ -30,7 +30,7 @@ See ``arch-xxx.py``. Example usage:
     unset PETSC_DIR PETSC_ARCH
     python $HOME/petsc_configure_helpers/arch-cray-xc50-daint.py
     make
-    git clone https://github.com/sciath/sciath
+    git submodule update --recursive         # gets SciATH
     $HOME/petsc_configure_helpers/test.py    # wait for jobs to finish
     $HOME/petsc_configure_helpers/test.py -v
     $HOME/petsc_configure_helpers/test.py -p
