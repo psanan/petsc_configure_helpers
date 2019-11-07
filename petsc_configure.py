@@ -127,10 +127,15 @@ def process_args(configure_options_in,args) :
             configure_options.append("--download-mumps")
         if args.extra >= 3:
             configure_options.append("--download-hdf5")
+            configure_options.append("--download-superlu_dist")
         if args.extra >= 4:
             if precision == 'double' :
                 configure_options.append("--download-sundials")
                 configure_options.append("--download-hypre")
+                configure_options.append("--download-pastix")
+                configure_options.append("--download-ptscotch") # for PASTIX
+        if args.extra >= 5:
+            configure_options.append("--download-petsc4py")
         if args.extra >=2 :
             arch_identifiers.append('extra')
 
