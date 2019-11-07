@@ -155,6 +155,7 @@ def process_args(configure_options_in,args) :
     download_c2html = get_option_value(configure_options,'--download-c2html')
     if not with_c2html != False and download_c2html != False :
         configure_options.append("--download-c2html")
+
     # Prefix
     prefix = get_option_value(configure_options,"--prefix")
     if prefix :
@@ -166,6 +167,7 @@ def process_args(configure_options_in,args) :
         if prefix :
             raise RuntimeError('Cannot use both --prefix and --prefix-auto')
         configure_options.append('--prefix='+os.path.join(os.getcwd(),'-'.join(arch_identifiers)+'-install'))
+        arch_identifiers.append('prefix')
 
     # Add PETSC_ARCH
     configure_options.append('PETSC_ARCH='+'-'.join(arch_identifiers))
