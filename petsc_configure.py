@@ -73,13 +73,13 @@ def process_args(configure_options_in,args) :
             arch_identifiers.append(precision)
 
     # MPI
-    # For my dev builds, I want to use a single system MPI, but for users,
-    # I heavily recommend --download-mpich
+    # By default, we use wrapper scripts which prepend "ccache" to system MPI commands
+    # For normal users, --download-mpich is heavily recommended
     with_mpi       = get_option_value(configure_options,"--with-mpi")
-    mpi_dir        = get_option_value(configure_options,"--mpi-dir")
+    with_mpi_dir        = get_option_value(configure_options,"--with-mpi-dir")
     download_mpich = get_option_value(configure_options,"--download-mpich")
-    if is_darwin and not mpi_dir and not download_mpich:
-        configure_options.append('--mpi-dir=/opt/local') # Where MacPorts install MPICH
+    if with_mpi != False and not with_mpi_dir and not download_mpich:
+        configure_options.append('--with-mpi-dir=' + os.path.join(os.path.dirname(os.path.realpath(__file__)),'ccache-mpi-wrappers','system'))
 
     # Integer precision
     if get_option_value(configure_options,"--with-64-bit-indices"):
