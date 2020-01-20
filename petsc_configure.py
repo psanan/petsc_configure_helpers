@@ -17,10 +17,9 @@
 # and look at the options that are actually being sent. This script should      #
 # be simple enough to figure out what's going on.                               #
 #                                                                               #
-# Patrick Sanan, 2018-2019                                                      #
+# Patrick Sanan, 2018-2020                                                      #
 #################################################################################
 
-# Idea: dump options in root dir, to safeguard against blowing away $PETSC_ARCH dir.
 from __future__ import print_function
 import sys
 import os
