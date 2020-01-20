@@ -62,12 +62,6 @@ def process_args(configure_options_in,args) :
     configure_options = configure_options_in[:] #copy
     arch_identifiers  = initialize_arch_identifiers(args)
 
-    # Compilers
-    if not get_option_value(configure_options,"--with-cc") and isdarwin :
-        configure_options.append('--with-cc=/usr/bin/gcc')
-    if not get_option_value(configure_options,"--with-cxx") and isdarwin :
-        configure_options.append('--with-cxx=/usr/bin/g++')
-
     # Floating point precision
     precision = get_option_value(configure_options,"--with-precision")
     if not precision :
@@ -77,6 +71,15 @@ def process_args(configure_options_in,args) :
             arch_identifiers.append('quad')
         else :
             arch_identifiers.append(precision)
+
+    # MPI
+    # For my dev builds, I want to use a single system MPI, but for users,
+    # I heavily recommend --download-mpich
+    with_mpi       = get_option_value(configure_options,"--with-mpi")
+    mpi_dir        = get_option_value(configure_options,"--mpi-dir")
+    download_mpich = get_option_value(configure_options,"--download-mpich")
+    if is_darwin and not mpi_dir and not download_mpich:
+        configure_options.append('--mpi-dir=/opt/local') # Where MacPorts install MPICH
 
     # Integer precision
     if get_option_value(configure_options,"--with-64-bit-indices"):
@@ -106,12 +109,6 @@ def process_args(configure_options_in,args) :
         else :
             if not is_darwin :
                 configure_options.append('--download-fblaslapack')
-
-    # MPI
-    with_mpi = get_option_value(configure_options,"--with-mpi")
-    download_mpich = get_option_value(configure_options,"--download-mpich")
-    if with_mpi != False and download_mpich != False :
-        configure_options.append('--download-mpich')
 
     # Extra packages
     if args.extra :
