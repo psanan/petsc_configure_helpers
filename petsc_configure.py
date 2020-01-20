@@ -54,7 +54,9 @@ def process_args(configure_options_in,args) :
     # 2. Processing of options depends on the processing of previous ones
 
     # OS X is ornery, so we base many decisions on whether "darwin" is used
-    isdarwin = detect_darwin()
+    # In particular, building external packages with compilers other
+    # than OS X's compilers (/usr/bin/gcc and /usr/bin/g++) is problematic
+    is_darwin = detect_darwin()
 
     # Initialize options and arch identifiers
     configure_options = configure_options_in[:] #copy
@@ -102,7 +104,7 @@ def process_args(configure_options_in,args) :
         if precision == '__float128' :
             configure_options.append('--download-f2cblaslapack')
         else :
-            if not isdarwin :
+            if not is_darwin :
                 configure_options.append('--download-fblaslapack')
 
     # MPI
