@@ -139,9 +139,6 @@ def process_args(configure_options_in,args) :
         if args.extra >=2 :
             arch_identifiers.append('extra')
 
-    # C2HTML (for building docs locally)
-    configure_options.append("--download-c2html")
-
     # Debugging
     debugging = get_option_value(configure_options,"--with-debugging")
     if debugging == False :
