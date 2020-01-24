@@ -17,10 +17,9 @@
 # and look at the options that are actually being sent. This script should      #
 # be simple enough to figure out what's going on.                               #
 #                                                                               #
-# Patrick Sanan, 2018-2019                                                      #
+# Patrick Sanan, 2018-2020                                                      #
 #################################################################################
 
-# Idea: dump options in root dir, to safeguard against blowing away $PETSC_ARCH dir.
 from __future__ import print_function
 import sys
 import os
@@ -55,17 +54,13 @@ def process_args(configure_options_in,args) :
     # 2. Processing of options depends on the processing of previous ones
 
     # OS X is ornery, so we base many decisions on whether "darwin" is used
-    isdarwin = detect_darwin()
+    # In particular, building external packages with compilers other
+    # than OS X's compilers (/usr/bin/gcc and /usr/bin/g++) is problematic
+    is_darwin = detect_darwin()
 
     # Initialize options and arch identifiers
     configure_options = configure_options_in[:] #copy
     arch_identifiers  = initialize_arch_identifiers(args)
-
-    # Compilers
-    if not get_option_value(configure_options,"--with-cc") and isdarwin :
-        configure_options.append('--with-cc=/usr/bin/gcc')
-    if not get_option_value(configure_options,"--with-cxx") and isdarwin :
-        configure_options.append('--with-cxx=/usr/bin/g++')
 
     # Floating point precision
     precision = get_option_value(configure_options,"--with-precision")
@@ -76,6 +71,15 @@ def process_args(configure_options_in,args) :
             arch_identifiers.append('quad')
         else :
             arch_identifiers.append(precision)
+
+    # MPI
+    # By default, we use wrapper scripts which prepend "ccache" to system MPI commands
+    # For normal users, --download-mpich is heavily recommended
+    with_mpi       = get_option_value(configure_options,"--with-mpi")
+    with_mpi_dir        = get_option_value(configure_options,"--with-mpi-dir")
+    download_mpich = get_option_value(configure_options,"--download-mpich")
+    if with_mpi != False and not with_mpi_dir and not download_mpich:
+        configure_options.append('--with-mpi-dir=' + os.path.join(os.path.dirname(os.path.realpath(__file__)),'ccache-mpi-wrappers','system'))
 
     # Integer precision
     if get_option_value(configure_options,"--with-64-bit-indices"):
@@ -103,14 +107,8 @@ def process_args(configure_options_in,args) :
         if precision == '__float128' :
             configure_options.append('--download-f2cblaslapack')
         else :
-            if not isdarwin :
+            if not is_darwin :
                 configure_options.append('--download-fblaslapack')
-
-    # MPI
-    with_mpi = get_option_value(configure_options,"--with-mpi")
-    download_mpich = get_option_value(configure_options,"--download-mpich")
-    if with_mpi != False and download_mpich != False :
-        configure_options.append('--download-mpich')
 
     # Extra packages
     if args.extra :
@@ -138,9 +136,6 @@ def process_args(configure_options_in,args) :
             configure_options.append("--download-petsc4py")
         if args.extra >=2 :
             arch_identifiers.append('extra')
-
-    # C2HTML (for building docs locally)
-    configure_options.append("--download-c2html")
 
     # Debugging
     debugging = get_option_value(configure_options,"--with-debugging")
