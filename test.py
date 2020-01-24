@@ -2,8 +2,11 @@
 # Test with SciATH (github.com/sciath/sciath)
 # This is supposed to work with any PETSC_DIR and PETSC_ARCH, on any system!
 
-import os
 import sys
+if sys.version_info[0] <= 2:
+    raise Exception("Use Python 3")
+
+import os
 import traceback
 srcDir = os.path.split(os.path.abspath(__file__))[0]    # directory of this file
 sys.path.append(os.path.join(srcDir,'sciath'))  # overrides
