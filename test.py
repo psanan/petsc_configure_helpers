@@ -9,7 +9,7 @@ if sys.version_info[0] <= 2:
 import os
 import traceback
 srcDir = os.path.split(os.path.abspath(__file__))[0]    # directory of this file
-sys.path.append(os.path.join(srcDir,'sciath'))  # overrides
+sys.path.insert(0,os.path.join(srcDir,'sciath'))  # overrides
 try:
   from sciath.harness import Harness
   from sciath.test import Test
