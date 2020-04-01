@@ -41,11 +41,11 @@ def get_args():
     parser.add_argument(
         '--archmod',
         default=None,
-        help=
-        "additional terms in arch name, usually from a branch e.g \"maint\"")
-    parser.add_argument('--dryrun',
-                        action="store_true",
-                        help="don't actually configure")
+        help= "additional terms in arch name, usually from a branch e.g \"maint\"")
+    parser.add_argument(
+        '--dryrun',
+        action="store_true",
+        help="don't actually configure")
     parser.add_argument(
         '--extra',
         type=int,
