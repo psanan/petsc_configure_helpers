@@ -249,6 +249,13 @@ def options_for_mpich_only(mpich_only_arch):
     """ Return a custom set of arguments to simply download and build MPICH """
     configure_options = []
     configure_options.append('--download-mpich')
+    if detect_darwin():
+        configure_options.append('--with-cc=ccache /usr/bin/gcc')
+        configure_options.append('--with-cxx=ccache /usr/bin/g++')
+    else:
+        configure_options.append('--with-cc=ccache gcc')
+        configure_options.append('--with-cxx=ccache g++')
+    configure_options.append('--with-fc=ccache gfortran')
     configure_options.append('--with-x=0')
     configure_options.append('--with-debugging=0')
     configure_options.append("--COPTFLAGS=-g -O3")
