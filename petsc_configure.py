@@ -99,16 +99,14 @@ def process_args(configure_options_in, args):
             arch_identifiers.append(precision)
 
     # MPI
-    # By default, we use wrapper scripts which prepend "ccache" to system MPI commands
+    # By default, we expect you to have ~/code/petsc/arch-mpich-only,
+    # which you created with this script.
     # For normal users, --download-mpich is heavily recommended
     with_mpi = get_option_value(configure_options, "--with-mpi")
     with_mpi_dir = get_option_value(configure_options, "--with-mpi-dir")
     download_mpich = get_option_value(configure_options, "--download-mpich")
     if with_mpi != False and not with_mpi_dir and not download_mpich:
-        configure_options.append(
-            '--with-mpi-dir=' +
-            os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                         'ccache-mpi-wrappers', 'system'))
+        configure_options.append('--with-mpi-dir=~/code/petsc/arch-mpich-only')
 
     # Integer precision
     if get_option_value(configure_options, "--with-64-bit-indices"):
