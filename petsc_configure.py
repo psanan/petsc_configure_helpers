@@ -76,8 +76,9 @@ def process_args(configure_options_in, args):
     # 2. Processing of options depends on the processing of previous ones
 
     # A special case
+    mpich_only_arch = 'arch-mpich-only'
     if args.mpich_only:
-        return options_for_mpich_only()
+        return options_for_mpich_only(mpich_only_arch)
 
     # OS X is ornery, so we base many decisions on whether "darwin" is used
     # In particular, building external packages with compilers other
@@ -99,14 +100,20 @@ def process_args(configure_options_in, args):
             arch_identifiers.append(precision)
 
     # MPI
-    # By default, we expect you to have ~/code/petsc/arch-mpich-only,
+    # By default, we expect you to have $HOME/code/petsc/arch-mpich-only,
     # which you created with this script.
-    # For normal users, --download-mpich is heavily recommended
     with_mpi = get_option_value(configure_options, "--with-mpi")
     with_mpi_dir = get_option_value(configure_options, "--with-mpi-dir")
     download_mpich = get_option_value(configure_options, "--download-mpich")
     if with_mpi != False and not with_mpi_dir and not download_mpich:
-        configure_options.append('--with-mpi-dir=~/code/petsc/arch-mpich-only')
+        mpich_only_petsc_dir = os.path.join(os.environ['HOME'], 'code', 'petsc')
+        mpich_only_dir = os.path.join(mpich_only_petsc_dir, mpich_only_arch)
+        if not os.path.isdir(mpich_only_dir):
+            print('Did not find expected', mpich_only_dir)
+            print('Either run this script with --mpich-only from', mpich_only_petsc_dir)
+            print('Or specify MPI some other way, e.g. --download-mpich')
+            sys.exit(1)
+        configure_options.append('--with-mpi-dir=' + mpich_only_dir)
 
     # Integer precision
     if get_option_value(configure_options, "--with-64-bit-indices"):
@@ -238,16 +245,16 @@ def initialize_arch_identifiers(args):
     return arch_identifiers
 
 
-def options_for_mpich_only():
+def options_for_mpich_only(mpich_only_arch):
     """ Return a custom set of arguments to simply download and build MPICH """
     configure_options = []
     configure_options.append('--download-mpich')
-    configure_options.append('--with-fc=0')
-    configure_options.append('--with-cxx=0')
     configure_options.append('--with-x=0')
     configure_options.append('--with-debugging=0')
     configure_options.append("--COPTFLAGS=-g -O3")
-    configure_options.append('PETSC_ARCH=arch-mpich-only')
+    configure_options.append("--CXXOPTFLAGS=-g -O3")
+    configure_options.append("--FOPTFLAGS=-g -O3")
+    configure_options.append('PETSC_ARCH=' + mpich_only_arch)
     configure_options.append('PETSC_DIR=' + os.getcwd())
     return configure_options
 
