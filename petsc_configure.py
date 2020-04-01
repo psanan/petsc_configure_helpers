@@ -39,19 +39,24 @@ def get_args() :
     parser.add_argument('--dryrun',action="store_true",help="don't actually configure")
     parser.add_argument('--extra',type=int,default=1,help="common extra packages (integer value, see script for now) ")
     parser.add_argument('--prefix-auto',action="store_true",help="set --prefix to a standard location (in this directory)")
+    parser.add_argument('--mpich-only',action="store_true",help="Custom options to simply obtain MPICH, to use elsewhere")
     args,unknown = parser.parse_known_args()
     return args,unknown
 
 def detect_darwin() :
     return sys.platform == 'darwin'
 
-def process_args(configure_options_in,args) :
+def process_args(configure_options_in, args) :
     """ Main logic to create a set of options for PETSc's configure script,
     along with a corresponding PETSC_ARCH string, if required """
 
     # NOTE: the order here is significant, as
     # 1. PETSC_ARCH names are constructed in order
     # 2. Processing of options depends on the processing of previous ones
+
+    # A special case
+    if args.mpich_only:
+        return options_for_mpich_only()
 
     # OS X is ornery, so we base many decisions on whether "darwin" is used
     # In particular, building external packages with compilers other
@@ -200,6 +205,21 @@ def initialize_arch_identifiers(args) :
     if args.archmod :
         arch_identifiers.append(args.archmod)
     return arch_identifiers
+
+
+def options_for_mpich_only():
+    """ Return a custom set of arguments to simply download and build MPICH """
+    configure_options = []
+    configure_options.append('--download-mpich')
+    configure_options.append('--with-fc=0')
+    configure_options.append('--with-cxx=0')
+    configure_options.append('--with-x=0')
+    configure_options.append('--with-debugging=0')
+    configure_options.append("--COPTFLAGS=-g -O3")
+    configure_options.append('PETSC_ARCH=arch-mpich-only')
+    configure_options.append('PETSC_DIR='+os.getcwd())
+    return configure_options
+
 
 def petsc_configure(configure_options,args) :
     """ Standard PETSc configuration script logic (from config/examples) """
