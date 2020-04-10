@@ -120,7 +120,7 @@ def process_args(configure_options_in, args):
         arch_identifiers.append("int64")
 
     # Scalar type
-    scalartype = get_option_value(configure_options, "--with-scalartype")
+    scalartype = get_option_value(configure_options, "--with-scalar-type")
     if not scalartype:
         scalartype == 'real'
     if scalartype and scalartype != 'real':
