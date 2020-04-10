@@ -149,7 +149,7 @@ def process_args(configure_options_in, args):
     # Extra packages
     if args.extra:
         if args.extra >= 1:
-            if scalartype != 'complex':
+            if scalartype != 'complex' and precision != '__float128':
                 configure_options.append('--download-suitesparse')
         if args.extra >= 2:
             configure_options.append('--download-scalapack')
