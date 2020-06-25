@@ -2,18 +2,19 @@
 # Test with SciATH (github.com/sciath/sciath)
 # This is supposed to work with any PETSC_DIR and PETSC_ARCH, on any system!
 
-import sys
-if sys.version_info[0] <= 2:
-    raise Exception("Use Python 3")
-
 import os
+import sys
 import traceback
+
 srcDir = os.path.split(os.path.abspath(__file__))[0]    # directory of this file
 sys.path.insert(0,os.path.join(srcDir,'sciath'))  # overrides
+
 try:
   from sciath.harness import Harness
-  from sciath.test import Test
+  from sciath.task import Task
   from sciath.job import Job
+  from sciath.test import Test
+  from sciath.verifier import ComparisonVerifier
 except Exception:
   if not sys.exc_info()[-1].tb_next:     # Check that the traceback has depth 1
     traceback.print_exc()
@@ -33,7 +34,7 @@ if not PETSC_DIR or not (PETSC_ARCH or PETSC_SRC_DIR):
   raise Exception('You must define PETSC_DIR and one of PETSC_ARCH or PETSC_SRC_DIR (to get example source with prefix build)')
 if not PETSC_SRC_DIR:
   PETSC_SRC_DIR = PETSC_DIR
-snes_ex_dir = os.path.join(PETSC_SRC_DIR,'src','snes','examples','tutorials')
+snes_ex_dir = os.path.join(PETSC_SRC_DIR,'src','snes','tutorials')
 
 def main():
   os.system('make -C ' +  snes_ex_dir + ' clean')
@@ -41,13 +42,11 @@ def main():
 
   Harness([ex19test(1),ex19test(2)]).run_from_args()
 
-  print("Only error codes are currently checked, so consider examining the test output directly")
-
 def ex19test(ranks):
-  test_name = 'ex19'+'_'+str(ranks)
+  test_name = 'ex19_%d' % ranks
   command = [os.path.join(snes_ex_dir,'ex19'),'-da_refine','3','-snes_monitor_short','-pc_type mg','-ksp_type fgmres','-pc_mg_type full']
-  test = Test(Job(command),test_name)
-  # TODO: compare to ex19.expected with smart diff, once that feature is properly updated
+  test = Test(Job(Task(command), test_name))
+  test.verifier = ComparisonVerifier(test, os.path.join(srcDir, 'ex19.expected'))
   return(test)
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 # SciATH
 *.conf
-*sandbox*
+*_output
 
 # Python
 *.pyc
