@@ -151,18 +151,18 @@ def process_args(configure_options_in, args):
         if args.extra >= 1:
             if scalartype != 'complex' and precision != '__float128':
                 configure_options.append('--download-suitesparse')
+            configure_options.append('--download-yaml')
         if args.extra >= 2:
             configure_options.append('--download-scalapack')
             configure_options.append('--download-metis')
-            download_cmake = get_option_value(configure_options,
-                                              "--download-cmake")
+            download_cmake = get_option_value(configure_options,'--download-cmake')
             if download_cmake == None:
                 configure_options.append('--download-cmake')  # for METIS
             configure_options.append('--download-parmetis')
-            configure_options.append("--download-mumps")
+            configure_options.append('--download-mumps')
         if args.extra >= 3:
-            configure_options.append("--download-hdf5")
-            configure_options.append("--download-superlu_dist")
+            configure_options.append('--download-hdf5')
+            configure_options.append('--download-superlu_dist')
         if args.extra >= 2:
             arch_identifiers.append('extra')
 
