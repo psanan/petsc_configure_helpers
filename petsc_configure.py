@@ -1,24 +1,24 @@
 #!/usr/bin/env python2
-#################################################################################
-#                       Configuration helper for PETSc                          #
-#################################################################################
-#                                                                               #
-# Execute from PETSC_DIR with Python 2 (used by older versions of PETSc)        #
-#                                                                               #
-# Run with -h to see arguments                                                  #
-#                                                                               #
-# Adds a thin extra layer around PETSc's configuration script,                  #
-# to help combine commonly-used combinations of configuration options and       #
-# construct meaningful PETSC_ARCH values.                                       #
-#                                                                               #
-# Proceeds by collecting the set of passed arguments and processing them        #
-# before sending them to PETSc's configure script.                              #
-# This logic will likely be somewhat brittle. Always do a sanity check          #
-# and look at the options that are actually being sent. This script should      #
-# be simple enough to figure out what's going on.                               #
-#                                                                               #
-# Patrick Sanan, 2018-2020                                                      #
-#################################################################################
+""" Configuration helper for PETSc
+
+Execute from PETSC_DIR
+
+Note that older version of PETSc require Python 2
+
+Run with -h to see arguments
+
+Adds a thin extra layer around PETSc's configuration script,
+to help combine commonly-used combinations of configuration options and
+construct meaningful PETSC_ARCH values.
+
+Proceeds by collecting the set of passed arguments and processing them
+before sending them to PETSc's configure script.
+This logic will likely be somewhat brittle. Always do a sanity check
+and look at the options that are actually being sent. This script should
+be simple enough to figure out what's going on.
+
+Patrick Sanan, 2018-2020
+"""
 
 from __future__ import print_function
 import sys
@@ -41,7 +41,7 @@ def get_args():
     parser.add_argument(
         '--archmod',
         default=None,
-        help= "additional terms in arch name, usually from a branch e.g \"maint\"")
+        help="additional terms in arch name, usually from a branch e.g \"maint\"")
     parser.add_argument(
         '--dryrun',
         action="store_true",
@@ -63,7 +63,7 @@ def get_args():
     return args, unknown
 
 
-def detect_darwin():
+def _detect_darwin():
     return sys.platform == 'darwin'
 
 
@@ -83,7 +83,7 @@ def process_args(configure_options_in, args):
     # OS X is ornery, so we base many decisions on whether "darwin" is used
     # In particular, building external packages with compilers other
     # than OS X's compilers (/usr/bin/gcc and /usr/bin/g++) is problematic
-    is_darwin = detect_darwin()
+    is_darwin = _detect_darwin()
 
     # Initialize options and arch identifiers
     configure_options = configure_options_in[:]  #copy
@@ -122,9 +122,10 @@ def process_args(configure_options_in, args):
     # Scalar type
     scalartype = get_option_value(configure_options, "--with-scalar-type")
     if not scalartype:
-        scalartype == 'real'
+        scalartype = 'real'
     if scalartype and scalartype != 'real':
         arch_identifiers.append(scalartype)
+        configure_options.append("--with-scalar-type=%s" % scalartype)
 
     # C language
     clanguage = get_option_value(configure_options, "--with-clanguage")
@@ -167,8 +168,8 @@ def process_args(configure_options_in, args):
         if args.extra >= 2:
             configure_options.append('--download-scalapack')
             configure_options.append('--download-metis')
-            download_cmake = get_option_value(configure_options,'--download-cmake')
-            if download_cmake == None:
+            download_cmake = get_option_value(configure_options, '--download-cmake')
+            if download_cmake is None:
                 configure_options.append('--download-cmake')  # for METIS
             configure_options.append('--download-parmetis')
             configure_options.append('--download-mumps')
@@ -183,7 +184,9 @@ def process_args(configure_options_in, args):
 
     # Debugging
     debugging = get_option_value(configure_options, "--with-debugging")
-    if debugging == False:
+    if debugging:
+        arch_identifiers.append('debug')
+    else:
         if not get_option_value(configure_options, "--COPTFLAGS"):
             configure_options.append("--COPTFLAGS=-g -O3")
         if not get_option_value(configure_options, "--CXXOPTFLAGS"):
@@ -193,8 +196,6 @@ def process_args(configure_options_in, args):
         if not get_option_value(configure_options, "--CUDAOPTFLAGS"):
             configure_options.append("--CUDAOPTLFLAGS=-O3")
         arch_identifiers.append('opt')
-    else:
-        arch_identifiers.append('debug')
 
     # C2HTML (for building docs locally)
     with_c2html = get_option_value(configure_options, '--with-c2html')
@@ -228,11 +229,11 @@ def process_args(configure_options_in, args):
 
 def get_option_value(configure_options, key):
     """ Get the value of a configure option """
-    r = re.compile(key + "=.*")
-    matches = list(filter(r.match, configure_options))
+    regexp = re.compile(key + "=.*")
+    matches = list(filter(regexp.match, configure_options))
     if len(matches) > 1:
         raise RuntimeError('More than one match for option', key)
-    elif len(matches) != 0:
+    elif matches:
         match = matches[0]
         if match == key:  # interpret exact key as True
             value = True
@@ -266,7 +267,7 @@ def options_for_mpich_only(mpich_only_arch):
     """ Return a custom set of arguments to simply download and build MPICH """
     configure_options = []
     configure_options.append('--download-mpich')
-    if detect_darwin():
+    if _detect_darwin():
         configure_options.append('--with-cc=ccache /usr/bin/gcc')
         configure_options.append('--with-cxx=ccache /usr/bin/g++')
     else:
@@ -285,7 +286,7 @@ def options_for_mpich_only(mpich_only_arch):
 
 def petsc_configure(configure_options, args):
     """ Standard PETSc configuration script logic (from config/examples) """
-    if (args.dryrun):
+    if args.dryrun:
         print("Dry Run. Would configure with these options:")
         print("\n".join(configure_options))
     else:
