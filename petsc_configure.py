@@ -146,6 +146,18 @@ def process_args(configure_options_in, args):
             if not is_darwin:
                 configure_options.append('--download-fblaslapack')
 
+    # CUDA
+    with_cuda = get_option_value(configure_options, "--with-cuda")
+    if with_cuda is None or with_cuda:
+        cuda_dir = get_option_value(configure_options, "--with-cuda-dir")
+        cuda_lib = get_option_value(configure_options, "--with-cuda-lib")
+        cuda_include = get_option_value(configure_options, "--with-cuda-include")
+        cuda_default_dir = "/usr/local/cuda"
+        if not cuda_dir and not cuda_lib and not cuda_include and os.path.isdir(cuda_default_dir):
+            if with_cuda is None:
+                configure_options.append("--with-cuda=1")
+            configure_options.append("--with-cuda-dir=%s" % cuda_default_dir)
+
     # Extra packages
     if args.extra:
         if args.extra >= 1:
@@ -163,6 +175,9 @@ def process_args(configure_options_in, args):
         if args.extra >= 3:
             configure_options.append('--download-hdf5')
             configure_options.append('--download-superlu_dist')
+            with_cuda = get_option_value(configure_options, "--with-cuda")
+            if with_cuda:
+                configure_options.append('--with-openmp=1')  # for SuperLU_dist GPU
         if args.extra >= 2:
             arch_identifiers.append('extra')
 
@@ -175,6 +190,8 @@ def process_args(configure_options_in, args):
             configure_options.append("--CXXOPTFLAGS=-g -O3")
         if not get_option_value(configure_options, "--FOPTFLAGS"):
             configure_options.append("--FOPTFLAGS=-g -O3")
+        if not get_option_value(configure_options, "--CUDAOPTFLAGS"):
+            configure_options.append("--CUDAOPTLFLAGS=-O3")
         arch_identifiers.append('opt')
     else:
         arch_identifiers.append('debug')
@@ -211,7 +228,7 @@ def process_args(configure_options_in, args):
 
 def get_option_value(configure_options, key):
     """ Get the value of a configure option """
-    r = re.compile(key + ".*")
+    r = re.compile(key + "=.*")
     matches = list(filter(r.match, configure_options))
     if len(matches) > 1:
         raise RuntimeError('More than one match for option', key)
@@ -220,8 +237,8 @@ def get_option_value(configure_options, key):
         if match == key:  # interpret exact key as True
             value = True
         else:
-            spl = match.split("=")
-            if len(spl) < 2:
+            spl = match.split("=", 1)
+            if len(spl) != 2:
                 raise RuntimeError(
                     'match ' + match +
                     ' does not seem to have correct --foo=bar format')
