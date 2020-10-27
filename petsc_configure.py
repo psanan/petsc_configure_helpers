@@ -162,7 +162,7 @@ def process_args(configure_options_in, args):
     # Extra packages
     if args.extra:
         if args.extra >= 1:
-            if scalartype != 'complex' and precision != '__float128':
+            if scalartype is 'real' and precision is 'double':
                 configure_options.append('--download-suitesparse')
             configure_options.append('--download-yaml')
         if args.extra >= 2:
