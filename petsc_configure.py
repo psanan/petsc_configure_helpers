@@ -194,7 +194,7 @@ def process_args(configure_options_in, args):
         if not get_option_value(configure_options, "--FOPTFLAGS"):
             configure_options.append("--FOPTFLAGS=-g -O3")
         if not get_option_value(configure_options, "--CUDAOPTFLAGS"):
-            configure_options.append("--CUDAOPTLFLAGS=-O3")
+            configure_options.append("--CUDAOPTFLAGS=-O3")
         arch_identifiers.append('opt')
 
     # C2HTML (for building docs locally)
