@@ -229,7 +229,7 @@ def process_args(configure_options_in, args):
 
 def get_option_value(configure_options, key):
     """ Get the value of a configure option """
-    regexp = re.compile(key + "=.*")
+    regexp = re.compile(key)
     matches = list(filter(regexp.match, configure_options))
     if len(matches) > 1:
         raise RuntimeError('More than one match for option', key)
