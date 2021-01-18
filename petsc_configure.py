@@ -184,7 +184,7 @@ def process_args(configure_options_in, args):
 
     # Debugging
     debugging = get_option_value(configure_options, "--with-debugging")
-    if debugging:
+    if debugging is None or debugging:
         arch_identifiers.append('debug')
     else:
         if not get_option_value(configure_options, "--COPTFLAGS"):
