@@ -190,11 +190,11 @@ def process_args(configure_options_in, args):
         arch_identifiers.append('debug')
     else:
         if not get_option_value(configure_options, "--COPTFLAGS"):
-            configure_options.append("--COPTFLAGS=-g -O3")
+            configure_options.append("--COPTFLAGS=-g -O3 -march=native")
         if not get_option_value(configure_options, "--CXXOPTFLAGS"):
-            configure_options.append("--CXXOPTFLAGS=-g -O3")
+            configure_options.append("--CXXOPTFLAGS=-g -O3 -march=native")
         if not get_option_value(configure_options, "--FOPTFLAGS"):
-            configure_options.append("--FOPTFLAGS=-g -O3")
+            configure_options.append("--FOPTFLAGS=-g -O3 -march=native")
         if not get_option_value(configure_options, "--CUDAOPTFLAGS"):
             configure_options.append("--CUDAOPTFLAGS=-O3")
         arch_identifiers.append('opt')
