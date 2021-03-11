@@ -148,9 +148,6 @@ def process_args(configure_options_in, args):
     if not download_fblaslapack and not download_f2cblaslapack:
         if precision == '__float128':
             configure_options.append('--download-f2cblaslapack')
-        else:
-            if not is_darwin:
-                configure_options.append('--download-fblaslapack')
 
     # CUDA
     with_cuda = get_option_value(configure_options, "--with-cuda")
