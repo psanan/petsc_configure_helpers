@@ -115,6 +115,11 @@ def process_args(configure_options_in, args):
             sys.exit(1)
         configure_options.append('--with-mpi-dir=' + mpich_only_dir)
 
+    # Fortran bindings
+    with_fortran_bindings = get_option_value(configure_options, "--with-fortran-bindings")
+    if with_fortran_bindings is None:
+        configure_options.append('--with-fortran-bindings=0')
+
     # Integer precision
     if get_option_value(configure_options, "--with-64-bit-indices"):
         arch_identifiers.append("int64")
