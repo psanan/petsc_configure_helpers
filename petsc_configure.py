@@ -90,7 +90,7 @@ def process_args(options_in, args):
     arch_identifiers = initialize_arch_identifiers(args)
 
     # Floating point precision
-    precision = get_option_value(options, "--with-precision")
+    precision = option_value(options, "--with-precision")
     if not precision:
         precision = 'double'
     if precision and precision != 'double':
@@ -102,9 +102,9 @@ def process_args(options_in, args):
     # MPI
     # By default, we expect you to have $HOME/code/petsc/arch-mpich-only,
     # which you created with this script.
-    with_mpi = get_option_value(options, "--with-mpi")
-    with_mpi_dir = get_option_value(options, "--with-mpi-dir")
-    download_mpich = get_option_value(options, "--download-mpich")
+    with_mpi = option_value(options, "--with-mpi")
+    with_mpi_dir = option_value(options, "--with-mpi-dir")
+    download_mpich = option_value(options, "--download-mpich")
     if with_mpi != False and not with_mpi_dir and not download_mpich:
         mpich_only_petsc_dir = os.path.join(os.environ['HOME'], 'code', 'petsc')
         mpich_only_dir = os.path.join(mpich_only_petsc_dir, mpich_only_arch)
@@ -116,16 +116,16 @@ def process_args(options_in, args):
         options.append('--with-mpi-dir=' + mpich_only_dir)
 
     # Fortran bindings
-    with_fortran_bindings = get_option_value(options, "--with-fortran-bindings")
+    with_fortran_bindings = option_value(options, "--with-fortran-bindings")
     if with_fortran_bindings is None:
         options.append('--with-fortran-bindings=0')
 
     # Integer precision
-    if get_option_value(options, "--with-64-bit-indices"):
+    if option_value(options, "--with-64-bit-indices"):
         arch_identifiers.append("int64")
 
     # Scalar type
-    scalartype = get_option_value(options, "--with-scalar-type")
+    scalartype = option_value(options, "--with-scalar-type")
     if not scalartype:
         scalartype = 'real'
     if scalartype and scalartype != 'real':
@@ -133,7 +133,7 @@ def process_args(options_in, args):
         options.append("--with-scalar-type=%s" % scalartype)
 
     # C language
-    clanguage = get_option_value(options, "--with-clanguage")
+    clanguage = option_value(options, "--with-clanguage")
     if not clanguage:
         clanguage = 'c'
     if clanguage and clanguage != 'c' and clanguage != 'C':
@@ -141,9 +141,9 @@ def process_args(options_in, args):
             arch_identifiers.append('cxx')
 
     # BLAS/LAPACK
-    download_fblaslapack = get_option_value(options,
+    download_fblaslapack = option_value(options,
                                             "--download-fblaslapack")
-    download_f2cblaslapack = get_option_value(options,
+    download_f2cblaslapack = option_value(options,
                                               "--download-f2cblaslapack")
     if not download_fblaslapack and not download_f2cblaslapack:
         if precision == '__float128':
@@ -158,7 +158,7 @@ def process_args(options_in, args):
         if args.extra >= 2:
             options.append('--download-scalapack')
             options.append('--download-metis')
-            download_cmake = get_option_value(options, '--download-cmake')
+            download_cmake = option_value(options, '--download-cmake')
             if download_cmake is None:
                 options.append('--download-cmake')  # for METIS
             options.append('--download-parmetis')
@@ -166,35 +166,35 @@ def process_args(options_in, args):
         if args.extra >= 3:
             options.append('--download-hdf5')
             options.append('--download-superlu_dist')
-            with_cuda = get_option_value(options, "--with-cuda")
+            with_cuda = option_value(options, "--with-cuda")
             if with_cuda:
                 options.append('--with-openmp=1')  # for SuperLU_dist GPU
         if args.extra >= 2:
             arch_identifiers.append('extra')
 
     # Debugging
-    debugging = get_option_value(options, "--with-debugging")
+    debugging = option_value(options, "--with-debugging")
     if debugging is None or debugging:
         arch_identifiers.append('debug')
     else:
-        if not get_option_value(options, "--COPTFLAGS"):
+        if not option_value(options, "--COPTFLAGS"):
             options.append("--COPTFLAGS=-g -O3 -march=native")
-        if not get_option_value(options, "--CXXOPTFLAGS"):
+        if not option_value(options, "--CXXOPTFLAGS"):
             options.append("--CXXOPTFLAGS=-g -O3 -march=native")
-        if not get_option_value(options, "--FOPTFLAGS"):
+        if not option_value(options, "--FOPTFLAGS"):
             options.append("--FOPTFLAGS=-g -O3 -march=native")
-        if not get_option_value(options, "--CUDAOPTFLAGS"):
+        if not option_value(options, "--CUDAOPTFLAGS"):
             options.append("--CUDAOPTFLAGS=-O3")
         arch_identifiers.append('opt')
 
     # C2HTML (for building docs locally)
-    with_c2html = get_option_value(options, '--with-c2html')
-    download_c2html = get_option_value(options, '--download-c2html')
+    with_c2html = option_value(options, '--with-c2html')
+    download_c2html = option_value(options, '--download-c2html')
     if not with_c2html != False and download_c2html != False:
         options.append("--download-c2html")
 
     # Prefix
-    prefix = get_option_value(options, "--prefix")
+    prefix = option_value(options, "--prefix")
     if prefix:
         arch_identifiers.append('prefix')
 
@@ -217,7 +217,7 @@ def process_args(options_in, args):
     return options
 
 
-def get_option_value(options, key):
+def option_value(options, key):
     """ Get the value of a configure option """
     regexp = re.compile(key)
     matches = list(filter(regexp.match, options))
