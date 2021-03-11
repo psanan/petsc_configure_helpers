@@ -149,18 +149,6 @@ def process_args(configure_options_in, args):
         if precision == '__float128':
             configure_options.append('--download-f2cblaslapack')
 
-    # CUDA
-    with_cuda = get_option_value(configure_options, "--with-cuda")
-    if with_cuda is None or with_cuda:
-        cuda_dir = get_option_value(configure_options, "--with-cuda-dir")
-        cuda_lib = get_option_value(configure_options, "--with-cuda-lib")
-        cuda_include = get_option_value(configure_options, "--with-cuda-include")
-        cuda_default_dir = "/usr/local/cuda"
-        if not cuda_dir and not cuda_lib and not cuda_include and os.path.isdir(cuda_default_dir):
-            if with_cuda is None:
-                configure_options.append("--with-cuda=1")
-            configure_options.append("--with-cuda-dir=%s" % cuda_default_dir)
-
     # Extra packages
     if args.extra:
         if args.extra >= 1:
@@ -233,6 +221,7 @@ def get_option_value(configure_options, key):
     """ Get the value of a configure option """
     regexp = re.compile(key)
     matches = list(filter(regexp.match, configure_options))
+    # FIXME this doesn't work with e.g. --with-cuda=1 --with-cuda-dir=foo:
     if len(matches) > 1:
         raise RuntimeError('More than one match for option', key)
     elif matches:
