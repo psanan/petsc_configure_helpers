@@ -147,7 +147,6 @@ def process_args(options_in, args):
         if args.extra >= 1:
             if scalartype is 'real' and precision is 'double':
                 options.append('--download-suitesparse')
-            options.append('--download-yaml')
         if args.extra >= 2:
             options.append('--download-scalapack')
             options.append('--download-metis')
