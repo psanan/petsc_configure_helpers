@@ -219,9 +219,11 @@ def process_args(options_in, args):
 
 def option_value(options, key):
     """ Get the value of a configure option """
-    regexp = re.compile(key)
+    # match the key either:
+    # - exactly (end of string, $), or
+    # - followed by = and 1 or more non-whitespace characters (\S)
+    regexp = re.compile(key + r'($|=\S+)')
     matches = list(filter(regexp.match, options))
-    # FIXME this doesn't work with e.g. --with-cuda=1 --with-cuda-dir=foo:
     if len(matches) > 1:
         raise RuntimeError('More than one match for option', key)
     elif matches:
@@ -231,18 +233,16 @@ def option_value(options, key):
         else:
             spl = match.split("=", 1)
             if len(spl) != 2:
-                raise RuntimeError(
-                    'match ' + match +
-                    ' does not seem to have correct --foo=bar format')
+                raise RuntimeError('match %s does not seem to be --foo[=bar]' % match)
             value = spl[1]
     else:  # no match
         value = None
-    if value == '0' or value == 'false' or value == 'no':
+    if value in ['0', 'false', 'no']:
         value = False
-    elif value == '1' or value == 'true' or value == 'yes':
+    elif value in ['1', 'true', 'yes']:
         value = True
     elif value == '':
-        raise RuntimeError("Don't know how to process " + match)
+        raise RuntimeError("Don't know how to process match " + match)
     return value
 
 
