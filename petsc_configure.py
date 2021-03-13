@@ -16,8 +16,6 @@ before sending them to PETSc's configure script.
 This logic will likely be somewhat brittle. Always do a sanity check
 and look at the options that are actually being sent. This script should
 be simple enough to figure out what's going on.
-
-Patrick Sanan, 2018-2020
 """
 
 from __future__ import print_function
@@ -80,11 +78,6 @@ def process_args(options_in, args):
     if args.mpich_only:
         return options_for_mpich_only(mpich_only_arch)
 
-    # OS X is ornery, so we base many decisions on whether "darwin" is used
-    # In particular, building external packages with compilers other
-    # than OS X's compilers (/usr/bin/gcc and /usr/bin/g++) is problematic
-    is_darwin = _detect_darwin()
-
     # Initialize options and arch identifiers
     options = options_in[:]  #copy
     arch_identifiers = initialize_arch_identifiers(args)
@@ -105,7 +98,7 @@ def process_args(options_in, args):
     with_mpi = option_value(options, "--with-mpi")
     with_mpi_dir = option_value(options, "--with-mpi-dir")
     download_mpich = option_value(options, "--download-mpich")
-    if with_mpi != False and not with_mpi_dir and not download_mpich:
+    if with_mpi is not False and not with_mpi_dir and not download_mpich:
         mpich_only_petsc_dir = os.path.join(os.environ['HOME'], 'code', 'petsc')
         mpich_only_dir = os.path.join(mpich_only_petsc_dir, mpich_only_arch)
         if not os.path.isdir(mpich_only_dir):
@@ -137,7 +130,7 @@ def process_args(options_in, args):
     if not clanguage:
         clanguage = 'c'
     if clanguage and clanguage != 'c' and clanguage != 'C':
-        if clanguage == 'cxx' or clanguage == 'Cxx' or clanguage == 'c++' or clanguage == 'C++':
+        if clanguage in ['cxx', 'Cxx', 'c++', 'C++']:
             arch_identifiers.append('cxx')
 
     # BLAS/LAPACK
@@ -190,7 +183,7 @@ def process_args(options_in, args):
     # C2HTML (for building docs locally)
     with_c2html = option_value(options, '--with-c2html')
     download_c2html = option_value(options, '--download-c2html')
-    if not with_c2html != False and download_c2html != False:
+    if not with_c2html is not False and download_c2html is not False:
         options.append("--download-c2html")
 
     # Prefix
@@ -226,7 +219,7 @@ def option_value(options, key):
     matches = list(filter(regexp.match, options))
     if len(matches) > 1:
         raise RuntimeError('More than one match for option', key)
-    elif matches:
+    if matches:
         match = matches[0]
         if match == key:  # interpret exact key as True
             value = True
@@ -235,7 +228,7 @@ def option_value(options, key):
             if len(spl) != 2:
                 raise RuntimeError('match %s does not seem to be --foo[=bar]' % match)
             value = spl[1]
-    else:  # no match
+    else:
         value = None
     if value in ['0', 'false', 'no']:
         value = False
@@ -264,11 +257,12 @@ def options_for_mpich_only(mpich_only_arch):
     else:
         options.append('--with-cc=ccache gcc')
         options.append('--with-cxx=ccache g++')
-    options.append('--with-fc=ccache gfortran')
+    options.append('--with-fc=gfortran')  #f90cache exists, but haven't tested
     options.append('--with-x=0')
     options.append('--with-debugging=0')
     options.append("--COPTFLAGS=-g -O3")
     options.append("--CXXOPTFLAGS=-g -O3")
+    options.append("--CUDAOPTFLAGS=-O3")
     options.append("--FOPTFLAGS=-g -O3")
     options.append('PETSC_ARCH=' + mpich_only_arch)
     options.append('PETSC_DIR=' + os.getcwd())
