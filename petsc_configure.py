@@ -56,7 +56,7 @@ def get_args():
     parser.add_argument(
         '--mpich-only',
         action="store_true",
-        help="Custom options to simply obtain MPICH, to use elsewhere")
+        help="Custom options to obtain MPICH with compiler caches, to use generally")
     args, unknown = parser.parse_known_args()
     return args, unknown
 
@@ -256,7 +256,7 @@ def options_for_mpich_only(mpich_only_arch):
     else:
         options.append('--with-cc=ccache gcc')
         options.append('--with-cxx=ccache g++')
-    options.append('--with-fc=gfortran')  #f90cache exists, but haven't tested
+    options.append('--with-fc=f90cache gfortran')
     options.append('--with-x=0')
     options.append('--with-debugging=0')
     options.append("--COPTFLAGS=-g -O3")

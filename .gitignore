@@ -2,6 +2,9 @@
 *.conf
 *_output
 
+# f90cache build
+f90cache
+
 # Python
 *.pyc
 __pycache__
