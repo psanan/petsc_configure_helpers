@@ -12,9 +12,9 @@ Example usage:
 ::
 
     git clone --recurse-submodules https://github.com/psanan/petsc_configure_helpers
-    git clone https://gitlab.com/petsc/petsc -b maint petsc-maint
+    git clone https://gitlab.com/petsc/petsc -b release petsc-release
     cd petsc-maint
-    ../petsc_configure_helpers/petsc_configure.py --archmod=maint --extra=2 --with-debugging=0
+    ../petsc_configure_helpers/petsc_configure.py --archmod=release --extra=2 --with-debugging=0
 
 Clusters
 ~~~~~~~~
