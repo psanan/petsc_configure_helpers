@@ -256,7 +256,7 @@ def options_for_mpich_only(mpich_only_arch):
     else:
         options.append('--with-cc=ccache gcc')
         options.append('--with-cxx=ccache g++')
-    options.append('--with-fc=f90cache gfortran')
+    options.append('--with-fc=gfortran')
     options.append('--with-x=0')
     options.append('--with-debugging=0')
     options.append("--COPTFLAGS=-g -O3")
