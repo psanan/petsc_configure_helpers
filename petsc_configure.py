@@ -259,10 +259,10 @@ def options_for_mpich_only(mpich_only_arch):
     options.append('--with-fc=gfortran')
     options.append('--with-x=0')
     options.append('--with-debugging=0')
-    options.append("--COPTFLAGS=-g -O3")
-    options.append("--CXXOPTFLAGS=-g -O3")
+    options.append("--COPTFLAGS=-g -O3 -march=native")
+    options.append("--CXXOPTFLAGS=-g -O3 -march=native")
     options.append("--CUDAOPTFLAGS=-O3")
-    options.append("--FOPTFLAGS=-g -O3")
+    options.append("--FOPTFLAGS=-g -O3 -march=native")
     options.append('PETSC_ARCH=' + mpich_only_arch)
     options.append('PETSC_DIR=' + os.getcwd())
     return options
