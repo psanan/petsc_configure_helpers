@@ -163,6 +163,9 @@ def process_args(options_in, args):
             with_cuda = option_value(options, "--with-cuda")
             if with_cuda:
                 options.append('--with-openmp=1')  # for SuperLU_dist GPU
+        if args.extra >= 4:
+            options.append('--download-triangle')
+            options.append('--download-sundials2')
         if args.extra >= 2:
             arch_identifiers.append('extra')
 
