@@ -157,6 +157,8 @@ def process_args(options_in, args):
             options.append('--download-mumps')
         if args.extra >= 3:
             options.append('--download-hdf5')
+            if with_fortran_bindings:
+                options.append('--download-hdf5-fortran-bindings')
             options.append('--download-superlu_dist')
             with_cuda = option_value(options, "--with-cuda")
             if with_cuda:
