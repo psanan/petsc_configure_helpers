@@ -142,6 +142,11 @@ def process_args(options_in, args):
         if precision == '__float128':
             options.append('--download-f2cblaslapack')
 
+    # X
+    with_x = option_value(options, "--with-x")
+    if with_x is None and _detect_darwin():
+        options.append("--with-x=0")
+
     # Extra packages
     if args.extra:
         if args.extra >= 1:
