@@ -294,7 +294,12 @@ def petsc_configure(options, args):
             sys.exit(1)
         print('Configuring with these options:')
         print("\n".join(options))
+
+        # Since petsc_configure looks directly at sys.argv, remove and replace arguments
+        argv_temp = sys.argv
+        sys.argv = sys.argv[:1]
         configure.petsc_configure(options)
+        sys.argv = argv_temp
 
 
 if __name__ == '__main__':
