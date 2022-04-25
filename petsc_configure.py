@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """ Configuration helper for PETSc
 
 Execute from PETSC_DIR
 
-Note that older version of PETSc require Python 2
+Note that older versions of PETSc require Python 2
 
 Run with -h to see arguments
 
