@@ -1,6 +1,6 @@
 # SciATH
-*.conf
-*_output
+/SciATH*
+/*_output
 
 # f90cache build
 f90cache
