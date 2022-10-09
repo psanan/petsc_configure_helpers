@@ -150,7 +150,7 @@ def process_args(options_in, args):
     # Extra packages
     if args.extra:
         if args.extra >= 1:
-            if scalartype is 'real' and precision is 'double':
+            if scalartype == 'real' and precision == 'double':
                 options.append('--download-suitesparse')
         if args.extra >= 2:
             options.append('--download-scalapack')
